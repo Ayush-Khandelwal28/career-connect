@@ -12,8 +12,8 @@ const JobCard = () => {
       title: "Software Engineer",
       company: "Google",
       location: "Mountain View, CA",
-      type: "Full Time",
-      work: "Onsite",
+      commitment: "Full Time",
+      mode: "Onsite",
       datePosted: "2021-10-01",
       salary: 150000,
     },
@@ -22,8 +22,8 @@ const JobCard = () => {
       title: "Product Manager",
       company: "Facebook",
       location: "Menlo Park, CA",
-      type: "Full Time",
-      work: "Remote",
+      commitment: "Full Time",
+      mode: "Remote",
       datePosted: "2021-09-15",
       salary: 130000,
     },
@@ -32,8 +32,8 @@ const JobCard = () => {
       title: "Data Scientist",
       company: "Amazon",
       location: "Seattle, WA",
-      type: "Full Time",
-      work: "Hybrid",
+      commitment: "Full Time",
+      mode: "Hybrid",
       datePosted: "2021-08-20",
       salary: 140000,
     },
@@ -42,8 +42,8 @@ const JobCard = () => {
       title: "UX Designer",
       company: "Apple",
       location: "Cupertino, CA",
-      type: "Contract",
-      work: "Onsite",
+      commitment: "Contract",
+      mode: "Onsite",
       datePosted: "2021-07-30",
       salary: 120000,
     },
@@ -62,8 +62,8 @@ const JobCard = () => {
               <h2 className="text-xl font-bold text-gray-800">{job.title}</h2>
               <p className="text-lg text-gray-600">{job.company}</p>
               <p className="text-md text-gray-500">{job.location}</p>
-              <p className="text-md text-gray-500">{job.type}</p>
-              <p className="text-md text-gray-500">{job.work}</p>
+              <p className="text-md text-gray-500">{job.commitment}</p>
+              <p className="text-md text-gray-500">{job.mode}</p>
             </div>
             <div className="flex flex-col items-end space-y-2">
               <p className="text-md text-gray-500">Posted: {job.datePosted}</p>

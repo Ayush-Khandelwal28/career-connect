@@ -10,12 +10,12 @@ const Header = () => {
       <nav>
         <ul className="flex space-x-8">
           <li>
-            <Link href="/Post" className="text-lg text-gray-600 hover:text-blue-600 transition-colors duration-300">
+            <Link href="/post" className="text-lg text-gray-600 hover:text-blue-600 transition-colors duration-300">
               Post
             </Link>
           </li>
           <li>
-            <Link href="/Profile" className="text-lg text-gray-600 hover:text-blue-600 transition-colors duration-300">
+            <Link href="/profile" className="text-lg text-gray-600 hover:text-blue-600 transition-colors duration-300">
               Profile
             </Link>
           </li>
