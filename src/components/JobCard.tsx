@@ -49,8 +49,9 @@ const JobCard = () => {
     },
   ];
 
-  const handleApplyNow = (id: number) => {
-    router.push(`/job/${id}`);
+  const handleViewJob = (id: number) => {
+    // router.push(`/job/${id}`);
+    window.open(`/job/${id}`, '_blank');
   };
 
   return (
@@ -70,9 +71,9 @@ const JobCard = () => {
               <p className="text-lg text-gray-600 font-semibold">${job.salary.toLocaleString()}</p>
               <button 
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
-                onClick={() => handleApplyNow(job.id)}
+                onClick={() => handleViewJob(job.id)}
               >
-                Apply Now
+                View Job
               </button>
             </div>
           </div>

@@ -1,5 +1,5 @@
-import HomePage from "./components/Homepage";
-import LandingPage from "./components/LandingPage";
+import HomePage from "../components/Homepage";
+import LandingPage from "../components/LandingPage";
 
 export default function Home() {
   let isSignedIn = true;

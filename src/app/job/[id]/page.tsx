@@ -1,10 +1,12 @@
 "use client";
 
 import { useParams } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
+import ApplyJob from '../../../components/applyJob';
 
 const page = () => {
   const { id } = useParams();
+  const [showApplication, setShowApplication] = useState(false);
 
   const jobs = [
     {
@@ -53,8 +55,13 @@ const page = () => {
     },
   ];
 
+  const applyJob = () => {
+    setShowApplication(true);
+  };
+  
+
   if (!id) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   const job = jobs.find(job => job.id === Number(id));
@@ -74,10 +81,14 @@ const page = () => {
         <p className="text-md text-gray-500">Salary: ${job.salary.toLocaleString()}</p>
         <h3 className="text-lg font-semibold mt-4">Description</h3>
         <p className="text-md text-gray-700">{job.description}</p>
-        <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
+        <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300" onClick={applyJob}>
           Apply Now
         </button>
       </div>
+      {showApplication && <ApplyJob 
+      isOpen={showApplication} 
+      onClose={() => setShowApplication(false)} 
+      jobTitle={job.title} />}
     </div>
   );
 };
