@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
 
 interface ShadCNDIalogProps {
   isOpen: boolean;
@@ -10,6 +10,7 @@ interface ShadCNDIalogProps {
 const applyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle }) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [text, setText] = useState('');
   const [resume, setResume] = useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,6 +23,7 @@ const applyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle }) =>
     const formData = new FormData();
     formData.append('email', email);
     formData.append('phone', phone);
+    formData.append('text', text);
     if (resume) {
       formData.append('resume', resume);
     }
@@ -67,6 +69,20 @@ const applyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle }) =>
               required
               className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
               placeholder="e.g., +1234567890"
+            />
+          </div>
+
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Why you should be hired for this role?</label>
+            <input
+              type="text"
+              name="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              required
+              className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
+              placeholder="I am perfect for this role because..."
             />
           </div>
 

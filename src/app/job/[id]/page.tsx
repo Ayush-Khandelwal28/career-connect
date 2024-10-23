@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
-import ApplyJob from '../../../components/applyJob';
+import ApplyJob from '../../../components/applyJobModal';
 
 const page = () => {
   const { id } = useParams();
