@@ -16,7 +16,6 @@ const Achievements = () => {
         <div>
             <form className="space-y-4" onSubmit={handleSubmit}>
               
-                {/* Achievement Description */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Achievement</label>
                     <input

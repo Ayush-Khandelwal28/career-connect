@@ -57,7 +57,6 @@ const JobPostForm = () => {
                 <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Post a Job</h1>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="flex flex-col space-y-4">
-                        {/* Job Title */}
                         <label className="block text-lg font-medium text-gray-700">
                             Job Title
                             <input

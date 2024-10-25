@@ -6,6 +6,7 @@ import Education from '../../components/resume/forms/Education';
 import WorkExperience from '../../components/resume/forms/WorkExperience';
 import Project from '../../components/resume/forms/Projects';
 import Achievements from '../../components/resume/forms/Achievements';
+import Skills from '../../components/resume/forms/Skills';
 import useModal from '../hooks/useModal';
 
 const ResumePage = () => {
@@ -31,6 +32,10 @@ const ResumePage = () => {
         {
             title: "Achievements",
             component: <Achievements />
+        },
+        {
+            title: "Skills",
+            component: <Skills />
         },
     ];
 
