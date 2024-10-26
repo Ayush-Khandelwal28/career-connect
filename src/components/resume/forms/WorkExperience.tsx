@@ -1,18 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef } from 'react';
+import { useResume } from '../../../app/context/ResumeContext';
 
-const WorkExperience = () => {
+const WorkExperience = forwardRef<HTMLFormElement, { onClose: () => void }>(({ onClose }, ref) => {
+  const [formData, setFormData] = useState({
+    organizationName: '',
+    role: '',
+    description: '',
+    startMonth: '',
+    startYear: '',
+    endMonth: '',
+    endYear: '',
+    stillWorking: false,
+  });
+  
+  const { resumeData, updateSection } = useResume(); // Get context
 
-  const [organizationName, setOrganizationName] = useState('');
-  const [role, setRole] = useState('');
-  const [description, setDescription] = useState('');
-  const [startMonth, setStartMonth] = useState('');
-  const [startYear, setStartYear] = useState('');
-  const [endMonth, setEndMonth] = useState('');
-  const [endYear, setEndYear] = useState('');
-  const [stillWorking, setStillWorking] = useState(false);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+    const checked = (e.target as HTMLInputElement).checked;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
 
-  const handleSubmit = () => {
-    const formData = {
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const { organizationName, role, description, startMonth, startYear, endMonth, endYear, stillWorking } = formData;
+
+    const workExperienceEntry = {
       organizationName,
       role,
       description,
@@ -21,26 +38,39 @@ const WorkExperience = () => {
       stillWorking,
     };
 
-    console.log('Form Data:', formData);
+    console.log('Form Data:', workExperienceEntry);
+
+    updateSection('workExperience', [...resumeData.workExperience, workExperienceEntry]);
 
     alert('Work experience details submitted successfully!');
-  };
+    
+    setFormData({
+      organizationName: '',
+      role: '',
+      description: '',
+      startMonth: '',
+      startYear: '',
+      endMonth: '',
+      endYear: '',
+      stillWorking: false,
+    });
 
+    onClose();
+  };
 
   const months = Array.from({ length: 12 }, (_, i) => new Date(0, i).toLocaleString('default', { month: 'long' }));
   const years = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i);
 
-
   return (
     <div>
-      <form className="space-y-4">
+      <form className="space-y-4" ref={ref} onSubmit={handleSubmit}>
         <div>
           <label className="block text-sm font-medium text-gray-700">Organization Name</label>
           <input
             type="text"
             name="organizationName"
-            value={organizationName}
-            onChange={(e) => setOrganizationName(e.target.value)}
+            value={formData.organizationName}
+            onChange={handleChange}
             required
             className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
             placeholder="Enter Organization Name"
@@ -52,8 +82,8 @@ const WorkExperience = () => {
           <input
             type="text"
             name="role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
+            value={formData.role}
+            onChange={handleChange}
             required
             className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
             placeholder="Enter Role"
@@ -64,8 +94,8 @@ const WorkExperience = () => {
           <label className="block text-sm font-medium text-gray-700">Description</label>
           <textarea
             name="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={formData.description}
+            onChange={handleChange}
             required
             className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
             placeholder="Brief description of your work"
@@ -77,8 +107,9 @@ const WorkExperience = () => {
           <label className="block text-sm font-medium text-gray-700">Start Date</label>
           <div className="flex space-x-2">
             <select
-              value={startMonth}
-              onChange={(e) => setStartMonth(e.target.value)}
+              name="startMonth"
+              value={formData.startMonth}
+              onChange={handleChange}
               className="mt-1 w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
               required
             >
@@ -90,8 +121,9 @@ const WorkExperience = () => {
               ))}
             </select>
             <select
-              value={startYear}
-              onChange={(e) => setStartYear(e.target.value)}
+              name="startYear"
+              value={formData.startYear}
+              onChange={handleChange}
               className="mt-1 w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
               required
             >
@@ -109,10 +141,11 @@ const WorkExperience = () => {
           <label className="block text-sm font-medium text-gray-700">End Date</label>
           <div className="flex space-x-2">
             <select
-              value={endMonth}
-              onChange={(e) => setEndMonth(e.target.value)}
+              name="endMonth"
+              value={formData.endMonth}
+              onChange={handleChange}
               className="mt-1 w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
-              disabled={stillWorking}
+              disabled={formData.stillWorking}
             >
               <option value="">Month</option>
               {months.map((month, index) => (
@@ -122,10 +155,11 @@ const WorkExperience = () => {
               ))}
             </select>
             <select
-              value={endYear}
-              onChange={(e) => setEndYear(e.target.value)}
+              name="endYear"
+              value={formData.endYear}
+              onChange={handleChange}
               className="mt-1 w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
-              disabled={stillWorking}
+              disabled={formData.stillWorking}
             >
               <option value="">Year</option>
               {years.map((year) => (
@@ -140,18 +174,19 @@ const WorkExperience = () => {
         <div className="flex items-center">
           <input
             type="checkbox"
-            id="stillWorking"
-            checked={stillWorking}
-            onChange={(e) => setStillWorking(e.target.checked)}
+            name="stillWorking"
+            checked={formData.stillWorking}
+            onChange={handleChange}
             className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
           />
           <label htmlFor="stillWorking" className="text-sm font-medium text-gray-700">
             Still Working
           </label>
         </div>
+        <button type="submit" style={{ display: 'none' }} />
       </form>
     </div>
-  )
-}
+  );
+});
 
-export default WorkExperience
+export default WorkExperience;

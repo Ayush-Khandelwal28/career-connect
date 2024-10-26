@@ -1,18 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
+import { useResume } from '../../../app/context/ResumeContext';
 
-const SkillsForm = () => {
+const SkillsForm = forwardRef<HTMLFormElement, { onClose: () => void }>(({ onClose }, ref) => {
     const allSkills = ['JavaScript', 'Python', 'React', 'Node.js', 'CSS', 'HTML', 'SQL', 'Java', 'C++', 'AWS', 'Docker', 'Kubernetes'];
+    const { resumeData, updateSection } = useResume();  
     const [availableSkills, setAvailableSkills] = useState(allSkills);
     const [searchSkill, setSearchSkill] = useState('');
-    const [addedSkills, setAddedSkills] = useState<string[]>([]);
+    const [addedSkills, setAddedSkills] = useState(resumeData.skills); 
     const [showDropdown, setShowDropdown] = useState(false);
 
     const handleAddSkill = (skill: string) => {
-        setAddedSkills([...addedSkills, skill]);
+        const updatedSkills = [...addedSkills, skill];
+        setAddedSkills(updatedSkills);
         setAvailableSkills(availableSkills.filter((s) => s !== skill));
         setSearchSkill('');
         setShowDropdown(false);
+
+        updateSection('skills', updatedSkills);
+    };
+
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        onClose();
     };
 
     const filteredSkills = availableSkills.filter((skill) =>
@@ -21,7 +31,7 @@ const SkillsForm = () => {
 
     return (
         <div>
-            <form className="space-y-4">
+            <form className="space-y-4" ref={ref} onSubmit={handleSubmit}>
                 <div className="relative">
                     <label className="block text-sm font-medium text-gray-700">Search and Add Skills</label>
                     <div className="flex">
@@ -72,9 +82,10 @@ const SkillsForm = () => {
                         ))}
                     </div>
                 </div>
+                <button type="submit" style={{ display: 'none' }} />
             </form>
         </div>
     );
-};
+});
 
 export default SkillsForm;

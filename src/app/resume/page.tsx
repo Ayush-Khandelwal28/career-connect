@@ -1,4 +1,5 @@
 "use client";
+
 import ResumeSection from '../../components/ResumeSection';
 import ResumeModal from '../../components/resume/ResumeModal';
 import CareerObjective from '../../components/resume/forms/CareerObjective';
@@ -8,36 +9,46 @@ import Project from '../../components/resume/forms/Projects';
 import Achievements from '../../components/resume/forms/Achievements';
 import Skills from '../../components/resume/forms/Skills';
 import useModal from '../hooks/useModal';
+import { useResume } from '../context/ResumeContext';
 
 const ResumePage = () => {
     const { modal, closeModal, openModal } = useModal();
+    const { resumeData } = useResume();
 
     const sections = [
         {
             title: "Career Objective",
-            component: <CareerObjective />
+            component: <CareerObjective />,
+            content: resumeData.careerObjective ? resumeData.careerObjective : "No career objective added",
         },
         {
             title: "Education",
-            component: <Education />
+            component: <Education />,
+            content: resumeData.education.length > 0 ? resumeData.education : "No education added",
         },
         {
             title: "Work Experience",
-            component: <WorkExperience />
+            component: <WorkExperience />,
+            content: resumeData.workExperience.length > 0 ? resumeData.workExperience : "No work experience added",
         },
         {
             title: "Projects",
-            component: <Project />
+            component: <Project />,
+            content: resumeData.projects.length > 0 ? resumeData.projects : "No projects added",
         },
         {
             title: "Achievements",
-            component: <Achievements />
+            component: <Achievements />,
+            content: resumeData.achievements.length > 0 ? resumeData.achievements : "No achievements added",
         },
         {
             title: "Skills",
-            component: <Skills />
+            component: <Skills />,
+            content: resumeData.skills.length > 0 ? resumeData.skills : "No skills added",
         },
+
     ];
+
 
     return (
         <div className="p-6 bg-gray-50 max-w-4xl mx-auto">
@@ -57,7 +68,7 @@ const ResumePage = () => {
                     <ResumeSection
                         key={index}
                         title={section.title}
-                        content=""
+                        content={section.content}
                         onAdd={() => openModal(ModalComponent)}
                         onEdit={() => openModal(ModalComponent)}
                         onDelete={() => console.log(`Delete ${section.title}`)}

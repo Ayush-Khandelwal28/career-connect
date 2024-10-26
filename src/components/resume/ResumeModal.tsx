@@ -1,6 +1,5 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
-import Education from "./forms/Education"
 
 interface ShadCNDIalogProps {
   isOpen: boolean;
@@ -10,6 +9,13 @@ interface ShadCNDIalogProps {
 }
 
 const ResumeModal: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, dialogTitle, formComponent }) => {
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSave = () => {
+    if (formRef.current) {
+      formRef.current.requestSubmit();
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -18,13 +24,13 @@ const ResumeModal: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, dialogTitle
           <DialogTitle>{dialogTitle}</DialogTitle>
         </DialogHeader>
 
-        {formComponent}
+        {React.cloneElement(formComponent, { ref: formRef, onClose })}
 
         <DialogFooter>
           <button
             type="button"
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
-            // onClick={handleSubmit}
+            onClick={handleSave}
           >
             Save
           </button>
