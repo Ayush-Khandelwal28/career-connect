@@ -1,6 +1,6 @@
 "use client";
 
-import ResumeSection from '../../components/ResumeSection';
+import ResumeSection from '@/components/ResumeSection';
 import ResumeModal from '../../components/resume/ResumeModal';
 import CareerObjective from '../../components/resume/forms/CareerObjective';
 import Education from '../../components/resume/forms/Education';
@@ -18,37 +18,47 @@ const ResumePage = () => {
     const sections = [
         {
             title: "Career Objective",
-            component: <CareerObjective />,
-            content: resumeData.careerObjective ? resumeData.careerObjective : "No career objective added",
+            key: "careerObjective",
+            component: <CareerObjective onClose={closeModal} />,
+            content: resumeData.careerObjective || null, // Pass null if no content
+            allowMultiple: false,
         },
         {
             title: "Education",
-            component: <Education />,
-            content: resumeData.education.length > 0 ? resumeData.education : "No education added",
+            key: "education",
+            component: <Education onClose={closeModal} />,
+            content: resumeData.education.length > 0 ? resumeData.education : null, // Pass null if empty
+            allowMultiple: true,
         },
         {
             title: "Work Experience",
-            component: <WorkExperience />,
-            content: resumeData.workExperience.length > 0 ? resumeData.workExperience : "No work experience added",
+            key: "workExperience",
+            component: <WorkExperience onClose={closeModal} />,
+            content: resumeData.workExperience.length > 0 ? resumeData.workExperience : null, // Pass null if empty
+            allowMultiple: true,
         },
         {
             title: "Projects",
-            component: <Project />,
-            content: resumeData.projects.length > 0 ? resumeData.projects : "No projects added",
+            key: "projects",
+            component: <Project onClose={closeModal} />,
+            content: resumeData.projects.length > 0 ? resumeData.projects : null, // Pass null if empty
+            allowMultiple: true,
         },
         {
             title: "Achievements",
-            component: <Achievements />,
-            content: resumeData.achievements.length > 0 ? resumeData.achievements : "No achievements added",
+            key: "achievements",
+            component: <Achievements onClose={closeModal} />,
+            content: resumeData.achievements.length > 0 ? resumeData.achievements : null, // Pass null if empty
+            allowMultiple: true,
         },
         {
             title: "Skills",
-            component: <Skills />,
-            content: resumeData.skills.length > 0 ? resumeData.skills : "No skills added",
+            key: "skills",
+            component: <Skills onClose={closeModal} />,
+            content: resumeData.skills.length > 0 ? resumeData.skills : null, // Pass null if empty
+            allowMultiple: true,
         },
-
     ];
-
 
     return (
         <div className="p-6 bg-gray-50 max-w-4xl mx-auto">
@@ -66,13 +76,14 @@ const ResumePage = () => {
 
                 return (
                     <ResumeSection
-                        key={index}
                         title={section.title}
+                        key={section.key}
+                        sectionKey={section.key}
                         content={section.content}
                         onAdd={() => openModal(ModalComponent)}
                         onEdit={() => openModal(ModalComponent)}
                         onDelete={() => console.log(`Delete ${section.title}`)}
-                        allowMultiple={false}
+                        allowMultiple={section.allowMultiple}
                     />
                 );
             })}
