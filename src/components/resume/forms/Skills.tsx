@@ -1,14 +1,25 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import { useResume } from '../../../app/context/ResumeContext';
 
-const SkillsForm = forwardRef<HTMLFormElement, { onClose: () => void }>(({ onClose }, ref) => {
+interface SkillsFormProps {
+  onClose: () => void;
+  initialSkills?: string[];
+}
+
+const SkillsForm = forwardRef<HTMLFormElement, SkillsFormProps>(({ onClose, initialSkills }, ref) => {
     const allSkills = ['JavaScript', 'Python', 'React', 'Node.js', 'CSS', 'HTML', 'SQL', 'Java', 'C++', 'AWS', 'Docker', 'Kubernetes'];
     const { resumeData, updateSection } = useResume();  
     const [availableSkills, setAvailableSkills] = useState(allSkills);
     const [searchSkill, setSearchSkill] = useState('');
-    const [addedSkills, setAddedSkills] = useState(resumeData.skills); 
+    const [addedSkills, setAddedSkills] = useState<string[]>(initialSkills || resumeData.skills); 
     const [showDropdown, setShowDropdown] = useState(false);
+
+    useEffect(() => {
+        if (initialSkills) {
+            setAddedSkills(initialSkills);
+        }
+    }, [initialSkills]);
 
     const handleAddSkill = (skill: string) => {
         const updatedSkills = [...addedSkills, skill];

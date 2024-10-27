@@ -6,11 +6,12 @@ interface ShadCNDIalogProps {
   onClose: () => void;
   dialogTitle: string;
   formComponent: ReactElement;
+  isEditMode: boolean;
+  editIndex: number;
 }
 
-const ResumeModal: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, dialogTitle, formComponent }) => {
+const ResumeModal: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, dialogTitle, formComponent, isEditMode, editIndex }) => {
   const formRef = useRef<HTMLFormElement>(null);
-
   const handleSave = () => {
     if (formRef.current) {
       formRef.current.requestSubmit();
@@ -24,7 +25,7 @@ const ResumeModal: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, dialogTitle
           <DialogTitle>{dialogTitle}</DialogTitle>
         </DialogHeader>
 
-        {React.cloneElement(formComponent, { ref: formRef, onClose })}
+        {React.cloneElement(formComponent, { ref: formRef, onClose, isEditMode, editIndex })}
 
         <DialogFooter>
           <button
@@ -32,7 +33,7 @@ const ResumeModal: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, dialogTitle
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
             onClick={handleSave}
           >
-            Save
+            {isEditMode ? 'Update' : 'Save'}
           </button>
           <button
             type="button"

@@ -1,3 +1,6 @@
+export interface careerObjective {
+    objective: string;
+}
 export interface Education {
     collegeName: string;
     degreeName: string;
@@ -23,8 +26,12 @@ export interface Projects {
     year: string;
 }
 
+export interface Skills {
+    skill: string;
+}
+
 export interface ResumeData {
-    careerObjective: string;
+    careerObjective: string[];
     education: Education[];
     workExperience: WorkExperience[];
     projects: Projects[];

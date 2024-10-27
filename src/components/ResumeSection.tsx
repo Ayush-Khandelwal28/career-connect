@@ -8,7 +8,6 @@ interface ResumeSectionProps {
     onAdd?: () => void;
     onEdit?: (index: number) => void; // Modified to pass index
     onDelete?: (index: number) => void; // Modified to pass index
-    allowMultiple: boolean; // Allow multiple items in the section
 }
 
 const ResumeSection: React.FC<ResumeSectionProps> = ({
@@ -18,7 +17,6 @@ const ResumeSection: React.FC<ResumeSectionProps> = ({
     onAdd,
     onEdit,
     onDelete,
-    allowMultiple,
 }) => {
 
     const renderContent = () => {
@@ -139,9 +137,7 @@ const ResumeSection: React.FC<ResumeSectionProps> = ({
                         className="text-blue-600 flex items-center space-x-1 hover:text-blue-800"
                     >
                         <FiPlus className="w-4 h-4" />
-                        {(!content || (Array.isArray(content) && content.length === 0) || allowMultiple) && (
-                            <span>Add {title.toLowerCase()}</span>
-                        )}
+                       <span>Add {title.toLowerCase()}</span>
                     </button>
                 )}
             </div>

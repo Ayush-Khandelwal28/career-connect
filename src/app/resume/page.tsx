@@ -1,5 +1,5 @@
 "use client";
-
+import React, { useState } from 'react';
 import ResumeSection from '@/components/ResumeSection';
 import ResumeModal from '../../components/resume/ResumeModal';
 import CareerObjective from '../../components/resume/forms/CareerObjective';
@@ -13,64 +13,94 @@ import { useResume } from '../context/ResumeContext';
 
 const ResumePage = () => {
     const { modal, closeModal, openModal } = useModal();
-    const { resumeData } = useResume();
+    const { resumeData, updateItem, deleteItem } = useResume();
+    const [editIndex, setEditIndex] = useState<number | null>(null);
+    const [editSectionKey, setEditSectionKey] = useState<string | null>(null);
 
     const sections = [
         {
             title: "Career Objective",
             key: "careerObjective",
-            component: <CareerObjective onClose={closeModal} />,
-            content: resumeData.careerObjective || null, // Pass null if no content
-            allowMultiple: false,
+            component: (initialData) => <CareerObjective onClose={closeModal} initialData={initialData} />,
+            content: resumeData.careerObjective || null
         },
         {
             title: "Education",
             key: "education",
-            component: <Education onClose={closeModal} />,
-            content: resumeData.education.length > 0 ? resumeData.education : null, // Pass null if empty
-            allowMultiple: true,
+            component: (initialData) => <Education onClose={closeModal} initialData={initialData} isEditMode={editIndex !== null} editIndex={editIndex} />,
+            content: resumeData.education.length > 0 ? resumeData.education : null
         },
         {
             title: "Work Experience",
             key: "workExperience",
-            component: <WorkExperience onClose={closeModal} />,
-            content: resumeData.workExperience.length > 0 ? resumeData.workExperience : null, // Pass null if empty
-            allowMultiple: true,
+            component: (initialData) => <WorkExperience onClose={closeModal} initialData={initialData} />,
+            content: resumeData.workExperience.length > 0 ? resumeData.workExperience : null
         },
         {
             title: "Projects",
             key: "projects",
-            component: <Project onClose={closeModal} />,
-            content: resumeData.projects.length > 0 ? resumeData.projects : null, // Pass null if empty
-            allowMultiple: true,
+            component: (initialData) => <Project onClose={closeModal} initialData={initialData} />,
+            content: resumeData.projects.length > 0 ? resumeData.projects : null
         },
         {
             title: "Achievements",
             key: "achievements",
-            component: <Achievements onClose={closeModal} />,
-            content: resumeData.achievements.length > 0 ? resumeData.achievements : null, // Pass null if empty
-            allowMultiple: true,
+            component: (initialData) => <Achievements onClose={closeModal} initialData={initialData} />,
+            content: resumeData.achievements.length > 0 ? resumeData.achievements : null
         },
         {
             title: "Skills",
             key: "skills",
-            component: <Skills onClose={closeModal} />,
-            content: resumeData.skills.length > 0 ? resumeData.skills : null, // Pass null if empty
-            allowMultiple: true,
+            component: (initialData) => <Skills onClose={closeModal} initialData={initialData} />,
+            content: resumeData.skills.length > 0 ? resumeData.skills : null
         },
     ];
+
+    const handleEdit = (sectionKey: string, index: number) => {
+        const initialData = resumeData[sectionKey][index]; // Fetch existing data
+        setEditIndex(index);
+        setEditSectionKey(sectionKey);
+
+        const section = sections.find((sec) => sec.key === sectionKey);
+        if (section) {
+            openModal(
+                <ResumeModal
+                    isOpen={true}
+                    onClose={closeModal}
+                    dialogTitle={`Edit ${section.title}`} // Use section.title for a more descriptive dialog title
+                    formComponent={
+                        React.cloneElement(
+                            section.component(initialData),
+                            {
+                                onClose: closeModal,
+                                initialData,
+                                isEditMode: true,
+                                editIndex: index, 
+                            }
+                        )
+                    }
+                    isEditMode={true}
+                    editIndex={index} // Add editIndex property
+                />
+            );
+        }
+    };
+
+    const handleDelete = (sectionKey: keyof typeof resumeData, index: number) => {
+        deleteItem(sectionKey, index);
+    };
 
     return (
         <div className="p-6 bg-gray-50 max-w-4xl mx-auto">
             {modal}
             <h1 className="text-3xl font-bold mb-6">Your Resume</h1>
-            {sections.map((section, index) => {
+            {sections.map((section) => {
                 const ModalComponent = (
                     <ResumeModal
                         isOpen={true}
                         onClose={closeModal}
                         dialogTitle={section.title}
-                        formComponent={section.component}
+                        formComponent={section.component(null)} // Pass null for empty modal
                     />
                 );
 
@@ -81,9 +111,8 @@ const ResumePage = () => {
                         sectionKey={section.key}
                         content={section.content}
                         onAdd={() => openModal(ModalComponent)}
-                        onEdit={() => openModal(ModalComponent)}
-                        onDelete={() => console.log(`Delete ${section.title}`)}
-                        allowMultiple={section.allowMultiple}
+                        onEdit={(index: number) => handleEdit(section.key as keyof typeof resumeData, index)} // Pass index
+                        onDelete={(index: number) => handleDelete(section.key as keyof typeof resumeData, index)} // Pass index
                     />
                 );
             })}
