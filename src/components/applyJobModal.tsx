@@ -28,12 +28,6 @@ const applyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle }) =>
       formData.append('resume', resume);
     }
 
-    console.log('Form Data:', {
-      email,
-      phone,
-      resume,
-    });
-
     alert('Application submitted successfully!');
     onClose(); 
   };

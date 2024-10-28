@@ -1,28 +1,17 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import { useResume } from '../../../app/context/ResumeContext';
+import { ProjectInterface } from '@/types';
 
 interface ProjectProps {
   onClose: () => void;
-  initialData?: {
-    projectName: string;
-    projectLink: string;
-    month: string;
-    year: string;
-    projectDescription: string;
-  };
+  initialData?: ProjectInterface
   isEditMode?: boolean;
   editIndex?: number;
 }
 
 const PersonalProject = forwardRef<HTMLFormElement, ProjectProps>(
   ({ onClose, initialData, isEditMode, editIndex }, ref) => {
-    const [projectDetails, setProjectDetails] = useState({
-      projectName: '',
-      projectLink: '',
-      month: '',
-      year: '',
-      projectDescription: '',
-    });
+    const [projectDetails, setProjectDetails] = useState({} as ProjectInterface);
 
     const { resumeData, updateSection, updateItem } = useResume();
 
@@ -50,13 +39,9 @@ const PersonalProject = forwardRef<HTMLFormElement, ProjectProps>(
         ...projectDetails,
         startDate: `${projectDetails.month} ${projectDetails.year}`,
       };
-
-      console.log('Submitting form:', { isEditMode, editIndex });
-
       if (isEditMode && editIndex !== undefined && editIndex >= 0) {
         updateItem('projects', editIndex, newProject);
       } else {
-        console.log('Adding new entry');
         updateSection('projects', [...resumeData.projects, newProject]);
       }
 

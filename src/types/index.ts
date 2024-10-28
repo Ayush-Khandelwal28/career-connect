@@ -1,7 +1,7 @@
-export interface careerObjective {
+export interface careerObjectiveInterface {
     objective: string;
 }
-export interface Education {
+export interface EducationInterface {
     collegeName: string;
     degreeName: string;
     courseName: string;
@@ -10,15 +10,18 @@ export interface Education {
     currentGPA: string;
 }
 
-export interface WorkExperience {
-    jobTitle: string;
-    companyName: string;
-    jobStartYear: string;
-    jobEndYear: string;
-    jobDescription: string;
+export interface WorkExperienceInterface {
+    role: string;
+    organizationName: string;
+    startMonth: string;
+    startYear: string;
+    endMonth: string;
+    endYear: string;
+    description: string;
+    stillWorking: boolean;
 }
 
-export interface Projects {
+export interface ProjectInterface {
     projectName: string;
     projectDescription: string;
     projectLink: string;
@@ -26,15 +29,19 @@ export interface Projects {
     year: string;
 }
 
-export interface Skills {
+export interface SkillInterface {
     skill: string;
+}
+
+export interface AchievementInterface {
+    achievement: string;
 }
 
 export interface ResumeData {
     careerObjective: string[];
-    education: Education[];
-    workExperience: WorkExperience[];
-    projects: Projects[];
+    education: EducationInterface[];
+    workExperience: WorkExperienceInterface[];
+    projects: ProjectInterface[];
     achievements: string[];
     skills: string[];
 }

@@ -1,30 +1,17 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import { useResume } from '../../../app/context/ResumeContext';
+import { EducationInterface } from '@/types';
 
 interface EducationProps {
   onClose: () => void;
-  initialData?: {
-    collegeName: string;
-    degreeName: string;
-    courseName: string;
-    courseStartYear: string;
-    courseEndYear: string;
-    currentGPA: string;
-  };
+  initialData?: EducationInterface
   isEditMode?: boolean;
   editIndex?: number;
 }
 
 const Education = forwardRef<HTMLFormElement, EducationProps>(
   ({ onClose, initialData, isEditMode, editIndex }, ref) => {
-    const [educationDetails, setEducationDetails] = useState({
-      collegeName: '',
-      degreeName: '',
-      courseName: '',
-      courseStartYear: '',
-      courseEndYear: '',
-      currentGPA: '',
-    });
+    const [educationDetails, setEducationDetails] = useState({} as EducationInterface);
 
     const { resumeData, updateSection, updateItem } = useResume();
 
@@ -45,12 +32,9 @@ const Education = forwardRef<HTMLFormElement, EducationProps>(
     const handleSubmit = (event: React.FormEvent) => {
       event.preventDefault();
     
-      console.log('Submitting form:', { isEditMode, editIndex });
-    
       if (isEditMode && editIndex !== undefined && editIndex >= 0) {
         updateItem('education', editIndex, educationDetails);
       } else {
-        console.log('Adding new entry');
         const updatedEducation = [...resumeData.education, educationDetails];
         updateSection('education', updatedEducation);
       }

@@ -1,34 +1,17 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import { useResume } from '../../../app/context/ResumeContext';
+import { WorkExperienceInterface } from '@/types';
 
 interface WorkExperienceProps {
   onClose: () => void;
-  initialData?: {
-    organizationName: string;
-    role: string;
-    description: string;
-    startMonth: string;
-    startYear: string;
-    endMonth: string;
-    endYear: string;
-    stillWorking: boolean;
-  };
+  initialData?: WorkExperienceInterface;
   isEditMode?: boolean;
   editIndex?: number;
 }
 
 const WorkExperience = forwardRef<HTMLFormElement, WorkExperienceProps>(
   ({ onClose, initialData, isEditMode, editIndex }, ref) => {
-    const [formData, setFormData] = useState({
-      organizationName: '',
-      role: '',
-      description: '',
-      startMonth: '',
-      startYear: '',
-      endMonth: '',
-      endYear: '',
-      stillWorking: false,
-    });
+    const [formData, setFormData] = useState({} as WorkExperienceInterface);
 
     const { resumeData, updateSection, updateItem } = useResume();
 
@@ -61,13 +44,10 @@ const WorkExperience = forwardRef<HTMLFormElement, WorkExperienceProps>(
         stillWorking,
       };
 
-      console.log('Submitting form:', { isEditMode, editIndex });
 
       if (isEditMode && editIndex !== undefined && editIndex >= 0) {
-        console.log('Editing mode detected');
         updateItem('workExperience', editIndex, workExperienceEntry);
       } else {
-        console.log('Adding new entry');
         updateSection('workExperience', [...resumeData.workExperience, workExperienceEntry]);
       }
 

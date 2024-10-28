@@ -1,34 +1,40 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import { useResume } from '../../../app/context/ResumeContext';
+import { SkillInterface } from '@/types';
 
 interface SkillsFormProps {
-  onClose: () => void;
-  initialSkills?: string[];
+    onClose: () => void;
+    initialData?: SkillInterface;
 }
 
-const SkillsForm = forwardRef<HTMLFormElement, SkillsFormProps>(({ onClose, initialSkills }, ref) => {
+const SkillsForm = forwardRef<HTMLFormElement, SkillsFormProps>(({ onClose, initialData }, ref) => {
     const allSkills = ['JavaScript', 'Python', 'React', 'Node.js', 'CSS', 'HTML', 'SQL', 'Java', 'C++', 'AWS', 'Docker', 'Kubernetes'];
-    const { resumeData, updateSection } = useResume();  
+    const { resumeData, updateSection } = useResume();
     const [availableSkills, setAvailableSkills] = useState(allSkills);
     const [searchSkill, setSearchSkill] = useState('');
-    const [addedSkills, setAddedSkills] = useState<string[]>(initialSkills || resumeData.skills); 
+    const [addedSkills, setAddedSkills] = useState<SkillInterface[]>(
+        initialData ? [initialData] : (resumeData.skills || [])
+    );
+
     const [showDropdown, setShowDropdown] = useState(false);
 
     useEffect(() => {
-        if (initialSkills) {
-            setAddedSkills(initialSkills);
+        if (initialData && initialData.skill && !addedSkills.some(skillObj => skillObj.skill === initialData.skill)) {
+            setAddedSkills((prevSkills) => [...prevSkills, initialData]);
+            setAvailableSkills(availableSkills.filter((s) => s !== initialData.skill));
         }
-    }, [initialSkills]);
+    }, [initialData]);
 
     const handleAddSkill = (skill: string) => {
-        const updatedSkills = [...addedSkills, skill];
+        const newSkill: SkillInterface = { skill };
+        const updatedSkills = [...addedSkills, newSkill];
         setAddedSkills(updatedSkills);
         setAvailableSkills(availableSkills.filter((s) => s !== skill));
         setSearchSkill('');
         setShowDropdown(false);
 
-        updateSection('skills', updatedSkills);
+        updateSection('skills', updatedSkills); // Updating as objects with skill property
     };
 
     const handleSubmit = (event: React.FormEvent) => {
@@ -51,14 +57,14 @@ const SkillsForm = forwardRef<HTMLFormElement, SkillsFormProps>(({ onClose, init
                             value={searchSkill}
                             onChange={(e) => {
                                 setSearchSkill(e.target.value);
-                                setShowDropdown(true);
+                                setShowDropdown(e.target.value.length > 0 && filteredSkills.length > 0);
                             }}
                             className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
                             placeholder="Search skills"
                         />
                         <button
                             type="button"
-                            onClick={() => setShowDropdown(!showDropdown)}
+                            onClick={() => setShowDropdown(!showDropdown && filteredSkills.length > 0)}
                             className="ml-2 mt-1 px-3 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
                         >
                             <MdOutlineArrowDropDownCircle />
@@ -83,12 +89,12 @@ const SkillsForm = forwardRef<HTMLFormElement, SkillsFormProps>(({ onClose, init
                 <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">Added Skills</label>
                     <div className="flex flex-wrap gap-2 mt-2">
-                        {addedSkills.map((skill, index) => (
+                        {addedSkills.map((item, index) => (
                             <span
                                 key={index}
                                 className="inline-block bg-gray-200 text-gray-700 py-1 px-3 rounded-full"
                             >
-                                {skill}
+                                {item.skill}
                             </span>
                         ))}
                     </div>

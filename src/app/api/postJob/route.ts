@@ -13,14 +13,11 @@ export async function POST(req: Request) {
 
     try {
         let data = await req.json(); 
-        console.log('Received data:', data);
         
         data = {
             ...data,
             datePosted: date,  
         };
-
-        console.log('Updated data with date:', data); 
 
         return NextResponse.json({ 
             message: "Job posted successfully!", 

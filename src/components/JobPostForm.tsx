@@ -27,7 +27,6 @@ const JobPostForm = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(job);
     
         try {
             const response = await fetch("/api/postJob", {

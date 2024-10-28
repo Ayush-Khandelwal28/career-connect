@@ -1,16 +1,17 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import { useResume } from '../../../app/context/ResumeContext';
+import { AchievementInterface } from '@/types';
 
 interface AchievementsProps {
   onClose: () => void;
-  initialData?: string;
+  initialData?: AchievementInterface;
   isEditMode?: boolean;
   editIndex?: number;
 }
 
 const Achievements = forwardRef<HTMLFormElement, AchievementsProps>(
   ({ onClose, initialData, isEditMode, editIndex }, ref) => {
-    const [achievement, setAchievement] = useState('');
+    const [achievement, setAchievement] = useState<AchievementInterface>({} as AchievementInterface);
     const { resumeData, updateSection, updateItem } = useResume();
 
     useEffect(() => {
@@ -24,14 +25,14 @@ const Achievements = forwardRef<HTMLFormElement, AchievementsProps>(
 
       if (isEditMode && editIndex !== undefined && editIndex >= 0) {
         const updatedAchievements = [...resumeData.achievements];
-        updatedAchievements[editIndex] = achievement; // Update the specific achievement
+        updatedAchievements[editIndex] = achievement; 
         updateSection('achievements', updatedAchievements);
       } else {
-        const updatedAchievements = [...resumeData.achievements, achievement]; // Add new achievement
+        const updatedAchievements = [...resumeData.achievements, achievement];
         updateSection('achievements', updatedAchievements);
       }
 
-      setAchievement(''); 
+      setAchievement({} as AchievementInterface);
 
       onClose();
     };
@@ -44,8 +45,8 @@ const Achievements = forwardRef<HTMLFormElement, AchievementsProps>(
             <input
               type="text"
               name="achievement"
-              value={achievement}
-              onChange={(e) => setAchievement(e.target.value)}
+              value={achievement.achievement || ''}
+              onChange={(e) => setAchievement({ ...achievement, achievement: e.target.value })}
               required
               className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
               placeholder="Enter your achievement"

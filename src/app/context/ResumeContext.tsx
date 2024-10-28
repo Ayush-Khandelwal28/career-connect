@@ -1,39 +1,15 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from 'react';
-
-interface Education {
-    collegeName: string;
-    degreeName: string;
-    courseName: string;
-    courseStartYear: string;
-    courseEndYear: string;
-    currentGPA: string;
-}
-
-interface WorkExperience {
-    jobTitle: string;
-    companyName: string;
-    jobStartYear: string;
-    jobEndYear: string;
-    jobDescription: string;
-}
-
-interface Projects {
-    projectName: string;
-    projectDescription: string;
-    projectLink: string;
-    month: string;
-    year: string;
-}
+import { careerObjectiveInterface, EducationInterface, WorkExperienceInterface, ProjectInterface, AchievementInterface, SkillInterface } from '@/types';
 
 interface ResumeData {
-    careerObjective: string[];
-    education: Education[]; 
-    workExperience: WorkExperience[];  
-    projects: Projects[];
-    achievements: string[];
-    skills: string[];
+    careerObjective: careerObjectiveInterface[];
+    education: EducationInterface[]; 
+    workExperience: WorkExperienceInterface[];  
+    projects: ProjectInterface[];
+    achievements: AchievementInterface[];
+    skills: SkillInterface[];
 }
 
 interface ResumeContextType {
@@ -67,7 +43,6 @@ export const ResumeProvider = ({ children }: ResumeProviderProps) => {
     };
 
     const updateItem = (section: keyof ResumeData, index: number, updatedItem: any) => {
-        console.log('Updating item:', { section, index, updatedItem });
         setResumeData((prevData) => {
             const updatedSection = [...(prevData[section] as any[])]; 
             updatedSection[index] = updatedItem; 
@@ -78,17 +53,18 @@ export const ResumeProvider = ({ children }: ResumeProviderProps) => {
         });
     };
 
-    // Delete a specific item within a section
     const deleteItem = (section: keyof ResumeData, index: number) => {
         setResumeData((prevData) => {
-            const updatedSection = [...prevData[section]]; // Copy section array
-            updatedSection.splice(index, 1); // Remove item
+            const updatedSection = [...prevData[section]]; 
+            updatedSection.splice(index, 1);
             return {
                 ...prevData,
                 [section]: updatedSection
             };
         });
     };
+
+    console.log('current resume data:', resumeData);
 
     return (
         <ResumeContext.Provider value={{ resumeData, updateSection, updateItem, deleteItem }}>
