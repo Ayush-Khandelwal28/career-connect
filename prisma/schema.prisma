@@ -1,0 +1,85 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  name     String
+  resume   Resume?
+}
+
+model Resume {
+  id                Int                   @id @default(autoincrement())
+  userId            Int                   @unique
+  user              User                  @relation(fields: [userId], references: [id])
+  careerObjective   CareerObjective[]
+  education         Education[]
+  workExperience    WorkExperience[]
+  projects          Project[]
+  achievements      Achievement[]
+  skills            Skill[]
+}
+
+model CareerObjective {
+  id        Int     @id @default(autoincrement())
+  objective String
+  resume    Resume  @relation(fields: [resumeId], references: [id])
+  resumeId  Int
+}
+
+model Education {
+  id             Int     @id @default(autoincrement())
+  collegeName    String
+  degreeName     String
+  courseName     String
+  courseStartYear String
+  courseEndYear  String
+  currentGPA     String
+  resume         Resume  @relation(fields: [resumeId], references: [id])
+  resumeId       Int
+}
+
+model WorkExperience {
+  id             Int     @id @default(autoincrement())
+  role           String
+  organizationName String
+  startMonth     String
+  startYear      String
+  endMonth       String
+  endYear        String
+  description    String
+  stillWorking   Boolean
+  resume         Resume  @relation(fields: [resumeId], references: [id])
+  resumeId       Int
+}
+
+model Project {
+  id               Int     @id @default(autoincrement())
+  projectName      String
+  projectDescription String
+  projectLink      String
+  month            String
+  year             String
+  resume           Resume  @relation(fields: [resumeId], references: [id])
+  resumeId         Int
+}
+
+model Achievement {
+  id        Int     @id @default(autoincrement())
+  achievement String
+  resume     Resume  @relation(fields: [resumeId], references: [id])
+  resumeId   Int
+}
+
+model Skill {
+  id        Int     @id @default(autoincrement())
+  skill     String
+  resume    Resume  @relation(fields: [resumeId], references: [id])
+  resumeId  Int
+}

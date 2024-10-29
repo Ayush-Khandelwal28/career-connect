@@ -8,14 +8,14 @@ import { useSectionsList } from '@/components/resume/sections';
 
 const ResumePage = () => {
     const { modal, closeModal, openModal } = useModal();
-    const { resumeData, updateItem, deleteItem } = useResume();
+    const { resumeData, updateItem, deleteItem, sendResumeData } = useResume();
     const [editIndex, setEditIndex] = useState<number | null>(null);
     const [editSectionKey, setEditSectionKey] = useState<string | null>(null);
 
     const sectionsList = useSectionsList();
 
     const handleEdit = (sectionKey: string, index: number) => {
-        const initialData = resumeData[sectionKey][index]; 
+        const initialData = resumeData[sectionKey][index];
         setEditIndex(index);
         setEditSectionKey(sectionKey);
 
@@ -25,7 +25,7 @@ const ResumePage = () => {
                 <ResumeModal
                     isOpen={true}
                     onClose={closeModal}
-                    dialogTitle={`Edit ${section.title}`} 
+                    dialogTitle={`Edit ${section.title}`}
                     formComponent={
                         React.cloneElement(
                             section.component(initialData),
@@ -33,12 +33,12 @@ const ResumePage = () => {
                                 onClose: closeModal,
                                 initialData,
                                 isEditMode: true,
-                                editIndex: index, 
+                                editIndex: index,
                             }
                         )
                     }
                     isEditMode={true}
-                    editIndex={index} 
+                    editIndex={index}
                 />
             );
         }
@@ -71,11 +71,14 @@ const ResumePage = () => {
                         sectionKey={section.key}
                         content={section.content}
                         onAdd={() => openModal(ModalComponent)}
-                        onEdit={(index: number) => handleEdit(section.key as keyof typeof resumeData, index)} 
-                        onDelete={(index: number) => handleDelete(section.key as keyof typeof resumeData, index)} 
+                        onEdit={(index: number) => handleEdit(section.key as keyof typeof resumeData, index)}
+                        onDelete={(index: number) => handleDelete(section.key as keyof typeof resumeData, index)}
                     />
                 );
             })}
+            <button className="mt-6 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" onClick={sendResumeData}>
+                Update Resume
+            </button>
         </div>
     );
 };
