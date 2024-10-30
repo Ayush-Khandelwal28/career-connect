@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { ResumeProvider } from "./context/ResumeContext";
+import { NextAuthProvider } from "./context/AuthContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,17 +28,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ResumeProvider>
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
-      >
-        <Header />
-        <main className="flex-grow">{children}</main>
-        <Footer />
-      </body>
-    </html>
-    </ResumeProvider>
+    <NextAuthProvider>
+      <ResumeProvider>
+        <html lang="en">
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+          >
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </body>
+        </html>
+      </ResumeProvider>
+    </NextAuthProvider>
   );
 }
 

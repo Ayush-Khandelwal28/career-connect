@@ -93,13 +93,13 @@ export const ResumeProvider = ({ children }: ResumeProviderProps) => {
         }
     };
 
-    console.log('Current resume data:', resumeData);
+    // console.log('Current resume data:', resumeData);
 
     useEffect(() => {
         const fetchResumeData = async () => {
             try {
                 const response = await fetch('/api/getResume');
-                if (!response.ok) throw new Error('Failed to fetch resume data');
+                // if (!response.ok) throw new Error('Failed to fetch resume data');
 
                 const data = await response.json();
                 setResumeData(data);

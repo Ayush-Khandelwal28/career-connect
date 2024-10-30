@@ -1,12 +1,18 @@
+"use client";
+import { useSession } from "next-auth/react";
 import HomePage from "../components/Homepage";
 import LandingPage from "../components/LandingPage";
 
 export default function Home() {
-  let isSignedIn = true;
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <p>Loading...</p>; 
+  }
 
   return (
     <div>
-      {isSignedIn ? (
+      {session ? (
         <HomePage />
       ) : (
         <LandingPage />

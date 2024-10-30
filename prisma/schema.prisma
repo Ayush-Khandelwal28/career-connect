@@ -8,16 +8,72 @@ generator client {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  name     String
-  resume   Resume?
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  name         String
+  role         Role
+  resume       Resume?
+  jobs         Job[]         @relation("PostedJobs") 
+  applications Application[] 
+}
+
+enum Role {
+  JOB_SEEKER
+  RECRUITER
+}
+
+model Job {
+  id          Int           @id @default(autoincrement())
+  title       String
+  description String        @db.Text
+  location    String
+  type        JobType
+  workMode    WorkMode
+  minSalary   Float
+  maxSalary   Float
+  salaryType  SalaryType
+  datePosted  DateTime      @default(now())
+  recruiter   User          @relation("PostedJobs", fields: [recruiterId], references: [id])
+  recruiterId Int
+  applicants  Application[] 
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+}
+
+enum WorkMode {
+  ONSITE
+  REMOTE
+  HYBRID
+}
+
+enum SalaryType {
+  YEARLY
+  MONTHLY
+}
+
+model Application {
+  id          Int       @id @default(autoincrement())
+  job         Job       @relation(fields: [jobId], references: [id])
+  jobId       Int
+  applicant   User      @relation(fields: [applicantId], references: [id])
+  applicantId Int
+  email       String
+  phone       String
+  coverLetter String
+  resumeLink  String    
+  createdAt   DateTime  @default(now())
 }
 
 model Resume {
-  id                Int                   @id @default(autoincrement())
-  userId            Int                   @unique
-  user              User                  @relation(fields: [userId], references: [id])
+  id                Int               @id @default(autoincrement())
+  userId            Int               @unique
+  user              User              @relation(fields: [userId], references: [id])
   careerObjective   CareerObjective[]
   education         Education[]
   workExperience    WorkExperience[]
@@ -27,10 +83,10 @@ model Resume {
 }
 
 model CareerObjective {
-  id        Int     @id @default(autoincrement())
-  objective String
-  resume    Resume  @relation(fields: [resumeId], references: [id])
-  resumeId  Int
+  id          Int     @id @default(autoincrement())
+  objective   String
+  resume      Resume  @relation(fields: [resumeId], references: [id])
+  resumeId    Int
 }
 
 model Education {
@@ -46,17 +102,17 @@ model Education {
 }
 
 model WorkExperience {
-  id             Int     @id @default(autoincrement())
-  role           String
+  id              Int     @id @default(autoincrement())
+  role            String
   organizationName String
-  startMonth     String
-  startYear      String
-  endMonth       String
-  endYear        String
-  description    String
-  stillWorking   Boolean
-  resume         Resume  @relation(fields: [resumeId], references: [id])
-  resumeId       Int
+  startMonth      String
+  startYear       String
+  endMonth        String
+  endYear         String
+  description     String
+  stillWorking    Boolean
+  resume          Resume  @relation(fields: [resumeId], references: [id])
+  resumeId        Int
 }
 
 model Project {
@@ -71,10 +127,10 @@ model Project {
 }
 
 model Achievement {
-  id        Int     @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   achievement String
-  resume     Resume  @relation(fields: [resumeId], references: [id])
-  resumeId   Int
+  resume      Resume  @relation(fields: [resumeId], references: [id])
+  resumeId    Int
 }
 
 model Skill {
