@@ -1,36 +1,65 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
+import { uploadFileToS3 } from '../utils/uploadFileToS3';
+import { useSession } from 'next-auth/react';
 
 interface ShadCNDIalogProps {
   isOpen: boolean;
   onClose: () => void;
   jobTitle: string;
+  jobId: string;
 }
 
-const applyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle }) => {
+const applyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle, jobId }) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [text, setText] = useState('');
   const [resume, setResume] = useState<File | null>(null);
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setResume(e.target.files[0]); 
+  const { data: session } = useSession();
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = await uploadFileToS3(file);
+      setResumeUrl(url);
     }
   };
 
-  const handleSubmit = () => {
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('phone', phone);
-    formData.append('text', text);
-    if (resume) {
-      formData.append('resume', resume);
+
+  const handleSubmit = async () => {
+
+    if (!resumeUrl) {
+      alert("Please wait until the file is uploaded.");
+      return;
     }
 
-    alert('Application submitted successfully!');
-    onClose(); 
+
+    const formDataToSend = {
+      jobId,
+      userId: session?.id!,
+      email,
+      phone,
+      coverLetter: text,
+      resumeLink: resumeUrl!,
+    };
+
+    const response = await fetch('/api/applyJob', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formDataToSend),
+    });
+
+    if (response.ok) {
+      alert('Application submitted successfully!');
+      onClose();
+    } else {
+      alert('Failed to submit application');
+    }
+
   };
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

@@ -3,17 +3,15 @@
 import React, { useState } from "react";
 
 const JobPostForm = () => {
-
     const [job, setJob] = useState({
         title: "",
         company: "",
         location: "",
-        type: "Full Time",
-        work: "Onsite",
-        datePosted: "",
+        type: "FULL_TIME", 
+        workMode: "ONSITE", 
         minSalary: "",
         maxSalary: "",
-        salaryType: "Yearly",
+        salaryType: "YEARLY", 
         description: "",
     });
 
@@ -47,8 +45,6 @@ const JobPostForm = () => {
             alert("Failed to post job.");
         }
     };
-    
-
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
@@ -103,24 +99,24 @@ const JobPostForm = () => {
                                 onChange={handleInputChange}
                                 className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
                             >
-                                <option value="Full Time">Full Time</option>
-                                <option value="Part Time">Part Time</option>
-                                <option value="Contract">Contract</option>
-                                <option value="Internship">Internship</option>
+                                <option value="FULL_TIME">Full Time</option>
+                                <option value="PART_TIME">Part Time</option>
+                                <option value="CONTRACT">Contract</option>
+                                <option value="INTERNSHIP">Internship</option>
                             </select>
                         </label>
 
                         <label className="block text-lg font-medium text-gray-700">
                             Work Mode
                             <select
-                                name="work"
-                                value={job.work}
+                                name="workMode" 
+                                value={job.workMode}
                                 onChange={handleInputChange}
                                 className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
                             >
-                                <option value="Onsite">Onsite</option>
-                                <option value="Remote">Remote</option>
-                                <option value="Hybrid">Hybrid</option>
+                                <option value="ONSITE">Onsite</option>
+                                <option value="REMOTE">Remote</option>
+                                <option value="HYBRID">Hybrid</option>
                             </select>
                         </label>
 
@@ -156,11 +152,10 @@ const JobPostForm = () => {
                                 onChange={handleInputChange}
                                 className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
                             >
-                                <option value="Yearly">Yearly</option>
-                                <option value="Monthly">Monthly</option>
+                                <option value="YEARLY">Yearly</option>
+                                <option value="MONTHLY">Monthly</option>
                             </select>
                         </label>
-
 
                         <label className="block text-lg font-medium text-gray-700">
                             Job Description
@@ -186,7 +181,7 @@ const JobPostForm = () => {
                 </form>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default JobPostForm
+export default JobPostForm;
