@@ -3,6 +3,8 @@
 import { useParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import ApplyJob from '../../../components/applyJobModal';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
   const { id } = useParams() as { id: string };
@@ -10,6 +12,9 @@ const Page = () => {
   const [job, setJob] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const { data: session } = useSession();
+  const Router = useRouter();
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -59,9 +64,18 @@ const Page = () => {
         <p className="text-md text-gray-500">Salary: ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}</p>
         <h3 className="text-lg font-semibold mt-4">Description</h3>
         <p className="text-md text-gray-700">{job.description}</p>
-        <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300" onClick={applyJob}>
-          Apply Now
-        </button>
+        {session?.role === 'JOB_SEEKER' && (
+          <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300" onClick={applyJob}>
+            Apply Now
+          </button>
+        )}
+        {session?.role === 'RECRUITER' && (
+          <button className="mt-6 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300" onClick={() => {
+            Router.push(`/job/applications/${id}`);
+          }}>
+            View Applicants
+          </button>
+        )}
       </div>
       {showApplication && <ApplyJob isOpen={showApplication} onClose={() => setShowApplication(false)} jobTitle={job.title} jobId={id} />}
     </div>
