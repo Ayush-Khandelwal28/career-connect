@@ -27,6 +27,7 @@ model Job {
   id          Int           @id @default(autoincrement())
   title       String
   description String        @db.Text
+  company     String
   location    String
   type        JobType
   workMode    WorkMode

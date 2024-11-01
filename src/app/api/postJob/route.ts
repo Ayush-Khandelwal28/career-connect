@@ -28,6 +28,7 @@ export async function POST(req: Request) {
         const jobData = {
             title: data.title as string,
             description: data.description as string,
+            company: data.company as string,
             location: data.location as string,
             type: data.type as JobType,
             workMode: data.workMode as WorkMode,
