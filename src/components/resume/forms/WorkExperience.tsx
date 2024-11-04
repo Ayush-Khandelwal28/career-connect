@@ -1,200 +1,96 @@
-import React, { useState, useEffect, forwardRef } from 'react';
-import { useResume } from '../../../app/context/ResumeContext';
-import { WorkExperienceInterface } from '@/types';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { FormProps } from '../../../types/index';
 
-interface WorkExperienceProps {
-  onClose: () => void;
-  initialData?: WorkExperienceInterface;
-  isEditMode?: boolean;
-  editIndex?: number;
-}
-
-const WorkExperience = forwardRef<HTMLFormElement, WorkExperienceProps>(
-  ({ onClose, initialData, isEditMode, editIndex }, ref) => {
-    const [formData, setFormData] = useState({} as WorkExperienceInterface);
-
-    const { resumeData, updateSection, updateItem } = useResume();
-
-    useEffect(() => {
-      if (initialData) {
-        setFormData(initialData);
-      }
-    }, [initialData]);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-      const { name, value, type } = e.target;
-      const checked = (e.target as HTMLInputElement).checked;
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: type === 'checkbox' ? checked : value,
-      }));
-    };
-
-    const handleSubmit = (event: React.FormEvent) => {
-      event.preventDefault();
-
-      const { organizationName, role, description, startMonth, startYear, endMonth, endYear, stillWorking } = formData;
-
-      const workExperienceEntry = {
-        organizationName,
-        role,
-        description,
-        startDate: `${startMonth} ${startYear}`,
-        endDate: stillWorking ? 'Present' : `${endMonth} ${endYear}`,
-        stillWorking,
-      };
-
-
-      if (isEditMode && editIndex !== undefined && editIndex >= 0) {
-        updateItem('workExperience', editIndex, workExperienceEntry);
-      } else {
-        updateSection('workExperience', [...resumeData.workExperience, workExperienceEntry]);
-      }
-
-      setFormData({
-        organizationName: '',
-        role: '',
-        description: '',
-        startMonth: '',
-        startYear: '',
-        endMonth: '',
-        endYear: '',
-        stillWorking: false,
-      });
-
-      onClose();
-    };
-
-    const months = Array.from({ length: 12 }, (_, i) => new Date(0, i).toLocaleString('default', { month: 'long' }));
-    const years = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i);
-
-    return (
+export function WorkExperienceForm({ formData, handleInputChange, handleCheckboxChange }: FormProps) {
+  return (
+    <>
       <div>
-        <form className="space-y-4" ref={ref} onSubmit={handleSubmit}>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Organization Name</label>
-            <input
-              type="text"
-              name="organizationName"
-              value={formData.organizationName}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
-              placeholder="Enter Organization Name"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Role</label>
-            <input
-              type="text"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
-              placeholder="Enter Role"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
-              placeholder="Brief description of your work"
-              rows={3}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Start Date</label>
-            <div className="flex space-x-2">
-              <select
-                name="startMonth"
-                value={formData.startMonth}
-                onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
-                required
-              >
-                <option value="">Month</option>
-                {months.map((month, index) => (
-                  <option key={index} value={month}>
-                    {month}
-                  </option>
-                ))}
-              </select>
-              <select
-                name="startYear"
-                value={formData.startYear}
-                onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
-                required
-              >
-                <option value="">Year</option>
-                {years.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">End Date</label>
-            <div className="flex space-x-2">
-              <select
-                name="endMonth"
-                value={formData.endMonth}
-                onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
-                disabled={formData.stillWorking}
-              >
-                <option value="">Month</option>
-                {months.map((month, index) => (
-                  <option key={index} value={month}>
-                    {month}
-                  </option>
-                ))}
-              </select>
-              <select
-                name="endYear"
-                value={formData.endYear}
-                onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
-                disabled={formData.stillWorking}
-              >
-                <option value="">Year</option>
-                {years.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              name="stillWorking"
-              checked={formData.stillWorking}
-              onChange={handleChange}
-              className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <label htmlFor="stillWorking" className="text-sm font-medium text-gray-700">
-              Still Working
-            </label>
-          </div>
-          <button type="submit" style={{ display: 'none' }} />
-        </form>
+        <Label htmlFor="role">Role</Label>
+        <Input
+          id="role"
+          name="role"
+          value={formData.role}
+          onChange={handleInputChange}
+          required
+        />
       </div>
-    );
-  }
-);
-
-export default WorkExperience;
+      <div>
+        <Label htmlFor="organizationName">Organization</Label>
+        <Input
+          id="organizationName"
+          name="organizationName"
+          value={formData.organizationName}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="startMonth">Start Month</Label>
+          <Input
+            id="startMonth"
+            name="startMonth"
+            value={formData.startMonth}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="startYear">Start Year</Label>
+          <Input
+            id="startYear"
+            name="startYear"
+            value={formData.startYear}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+      </div>
+      <div className="flex items-center space-x-2">
+        <Checkbox
+          id="stillWorking"
+          checked={formData.stillWorking}
+          onCheckedChange={(checked: boolean) => handleCheckboxChange?.('stillWorking', checked)}
+        />
+        <Label htmlFor="stillWorking">Currently working here</Label>
+      </div>
+      {!formData.stillWorking && (
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="endMonth">End Month</Label>
+            <Input
+              id="endMonth"
+              name="endMonth"
+              value={formData.endMonth}
+              onChange={handleInputChange}
+              required={!formData.stillWorking}
+            />
+          </div>
+          <div>
+            <Label htmlFor="endYear">End Year</Label>
+            <Input
+              id="endYear"
+              name="endYear"
+              value={formData.endYear}
+              onChange={handleInputChange}
+              required={!formData.stillWorking}
+            />
+          </div>
+        </div>
+      )}
+      <div>
+        <Label htmlFor="description">Description</Label>
+        <textarea
+          id="description"
+          name="description"
+          value={formData.description}
+          onChange={handleInputChange}
+          className="w-full min-h-[100px] p-2 border rounded"
+          required
+        />
+      </div>
+    </>
+  );
+}

@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { ResumeProvider } from "./context/ResumeContext";
 import { NextAuthProvider } from "./context/AuthContext";
 
 const geistSans = localFont({
@@ -29,17 +28,15 @@ export default function RootLayout({
 }>) {
   return (
     <NextAuthProvider>
-      <ResumeProvider>
-        <html lang="en">
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
-          >
-            <Header />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </body>
-        </html>
-      </ResumeProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        >
+          <Header />
+          <main className="flex-grow">{children}</main>
+          <Footer />
+        </body>
+      </html>
     </NextAuthProvider>
   );
 }

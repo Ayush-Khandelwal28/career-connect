@@ -1,128 +1,65 @@
-import React from 'react';
-import { FiEdit, FiTrash, FiPlus } from 'react-icons/fi';
+import { Button } from '@/components/ui/button';
+import { PlusCircle, Pencil, Trash2 } from 'lucide-react';
 
-interface ResumeSectionProps {
-    title: string;
-    content: any;
-    sectionKey: string;
-    onAdd?: () => void;
-    onEdit?: (index: number) => void;
-    onDelete?: (index: number) => void;
+interface ResumeSectionProps<T> {
+  title: string;
+  items: T[];
+  onAdd: () => void;
+  onEdit: (index: number) => void;
+  onDelete: (index: number) => void;
+  renderItem: (item: T) => React.ReactNode;
 }
 
-const ResumeSection: React.FC<ResumeSectionProps> = ({
-    title,
-    content,
-    sectionKey,
-    onAdd,
-    onEdit,
-    onDelete,
-}) => {
+function ResumeSection<T>({
+  title,
+  items,
+  onAdd,
+  onEdit,
+  onDelete,
+  renderItem,
+}: ResumeSectionProps<T>) {
+  return (
+    <div className="bg-white rounded-lg shadow p-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+        <Button onClick={onAdd} variant="outline" size="sm">
+          <PlusCircle className="h-4 w-4 mr-2" />
+          Add {title}
+        </Button>
+      </div>
 
-    const ActionButton = ({
-        label,
-        onClick,
-        Icon,
-        className
-    }: {
-        label: string;
-        onClick: () => void;
-        Icon: React.ElementType;
-        className: string;
-    }) => (
-        <button
-            onClick={onClick}
-            className={`flex items-center space-x-1 ${className}`}
-        >
-            <Icon className="w-4 h-4" />
-            <span>{label}</span>
-        </button>
-    );
-
-    const renderItem = (item: any) => {
-        const commonFields: { [key: string]: JSX.Element } = {
-            careerObjective: <p>{item.objective}</p>,
-            education: (
-                <>
-                    <p><strong>College:</strong> {item.collegeName}</p>
-                    <p><strong>Degree:</strong> {item.degreeName} in {item.courseName}</p>
-                    <p><strong>Years:</strong> {item.courseStartYear} - {item.courseEndYear}</p>
-                    <p><strong>GPA:</strong> {item.currentGPA}</p>
-                </>
-            ),
-            workExperience: (
-                <>
-                    <p><strong>Job Title:</strong> {item.role}</p>
-                    <p><strong>Company:</strong> {item.organizationName}</p>
-                    <p><strong>Years:</strong> {item.startDate} - {item.endDate}</p>
-                    <p><strong>Description:</strong> {item.description}</p>
-                </>
-            ),
-            projects: (
-                <>
-                    <p><strong>Project:</strong> {item.projectName}</p>
-                    <p><strong>Description:</strong> {item.projectDescription}</p>
-                    <p><strong>Link:</strong> <a href={item.projectLink} target="_blank" rel="noopener noreferrer">{item.projectLink}</a></p>
-                    <p><strong>Date:</strong> {item.month} {item.year}</p>
-                </>
-            ),
-            achievements: <p>{item.achievement}</p>,
-            skills: <p>{item.skill}</p>,
-        };
-
-        return commonFields[sectionKey] || <pre className="bg-gray-100 p-2 rounded">{JSON.stringify(item, null, 2)}</pre>;
-    };
-
-    // Function to handle rendering content with edit/delete options
-    const renderContent = () => {
-        if (!content || (Array.isArray(content) && content.length === 0)) {
-            return <p>No {title.toLowerCase()} added</p>;
-        }
-
-        const renderActionButtons = (index: number) => (
-            <div className="w-1/4 flex justify-end space-x-2">
-                {onEdit && <ActionButton label="Edit" onClick={() => onEdit(index)} Icon={FiEdit} className="text-yellow-600 hover:text-yellow-800" />}
-                {onDelete && <ActionButton label="Delete" onClick={() => onDelete(index)} Icon={FiTrash} className="text-red-600 hover:text-red-800" />}
+      <div className="space-y-4">
+        {items.map((item, index) => (
+          <div key={index} className="relative bg-gray-50 rounded-lg p-4">
+            <div className="absolute top-2 right-2 flex space-x-2">
+              <Button
+                onClick={() => onEdit(index)}
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+              <Button
+                onClick={() => onDelete(index)}
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
             </div>
-        );
-
-        return Array.isArray(content)
-            ? content.map((item, index) => (
-                <div key={index} className="flex items-center justify-between mb-4">
-                    <div className="w-3/4">{renderItem(item)}</div>
-                    {renderActionButtons(index)}
-                </div>
-              ))
-            : (
-                <div className="flex items-center justify-between">
-                    <div className="w-3/4">{renderItem(content)}</div>
-                    {renderActionButtons(0)}
-                </div>
-              );
-    };
-
-    return (
-        <div className="flex flex-col space-y-4 p-4 border-b border-gray-200">
-            <div className="flex">
-                <div className="w-1/4 text-gray-600 font-semibold">
-                    <h3>{title}</h3>
-                </div>
-                <div className="w-3/4">
-                    {renderContent()}
-                </div>
-            </div>
-            {onAdd && (
-                <div className="flex justify-end space-x-4">
-                    <ActionButton
-                        label={`Add ${title.toLowerCase()}`}
-                        onClick={onAdd}
-                        Icon={FiPlus}
-                        className="text-blue-600 hover:text-blue-800"
-                    />
-                </div>
-            )}
-        </div>
-    );
-};
+            {renderItem(item)}
+          </div>
+        ))}
+        {items.length === 0 && (
+          <p className="text-gray-500 text-center py-4">
+            No {title.toLowerCase()} added yet
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default ResumeSection;

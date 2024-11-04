@@ -1,58 +1,75 @@
-import React, { useState } from 'react';
-import CareerObjective from '../../components/resume/forms/CareerObjective';
-import Education from '../../components/resume/forms/Education';
-import WorkExperience from '../../components/resume/forms/WorkExperience';
-import Project from '../../components/resume/forms/Projects';
-import Achievements from '../../components/resume/forms/Achievements';
-import Skills from '../../components/resume/forms/Skills';
+import { ResumeData } from '../../types';
 
-import { useResume } from '../../app/context/ResumeContext';
-import useModal from '../../app/hooks/useModal';
+interface Section {
+  key: keyof ResumeData;
+  title: string;
+  renderItem: (item: any) => React.ReactNode;
+}
 
-import { careerObjectiveInterface, EducationInterface, WorkExperienceInterface, ProjectInterface, AchievementInterface, SkillInterface } from '@/types';
-
-export const useSectionsList = () => {
-    const { resumeData } = useResume();
-    const { closeModal } = useModal();
-
-    const [editIndex, setEditIndex] = useState<number | null>(null);
-
-    return [
-        {
-            title: "Career Objective",
-            key: "careerObjective",
-            component: (initialData : careerObjectiveInterface[]) => <CareerObjective onClose={closeModal} initialData={initialData} />,
-            content: resumeData.careerObjective.length > 0 ? resumeData.careerObjective : null
-        },
-        {
-            title: "Education",
-            key: "education",
-            component: (initialData : EducationInterface) => <Education onClose={closeModal} initialData={initialData} isEditMode={editIndex !== null} editIndex={editIndex ?? undefined} />,
-            content: resumeData.education.length > 0 ? resumeData.education : null
-        },
-        {
-            title: "Work Experience",
-            key: "workExperience",
-            component: (initialData : WorkExperienceInterface) => <WorkExperience onClose={closeModal} initialData={initialData} />,
-            content: resumeData.workExperience.length > 0 ? resumeData.workExperience : null
-        },
-        {
-            title: "Projects",
-            key: "projects",
-            component: (initialData : ProjectInterface) => <Project onClose={closeModal} initialData={initialData} />,
-            content: resumeData.projects.length > 0 ? resumeData.projects : null
-        },
-        {
-            title: "Achievements",
-            key: "achievements",
-            component: (initialData : AchievementInterface) => <Achievements onClose={closeModal} initialData={initialData} />,
-            content: resumeData.achievements.length > 0 ? resumeData.achievements : null
-        },
-        {
-            title: "Skills",
-            key: "skills",
-            component: (initialData : SkillInterface) => <Skills onClose={closeModal} initialData={initialData} />,
-            content: resumeData.skills.length > 0 ? resumeData.skills : null
-        },
-    ];
-};
+export function useSections(): Section[] {
+  return [
+    {
+      key: 'careerObjective',
+      title: 'Career Objective',
+      renderItem: (item) => <p className="text-gray-700">{item.objective}</p>,
+    },
+    {
+      key: 'education',
+      title: 'Education',
+      renderItem: (item) => (
+        <div>
+          <h4 className="font-semibold">{item.degreeName} in {item.courseName}</h4>
+          <p className="text-gray-600">{item.collegeName}</p>
+          <p className="text-gray-500">
+            {item.courseStartYear} - {item.courseEndYear} | GPA: {item.currentGPA}
+          </p>
+        </div>
+      ),
+    },
+    {
+      key: 'workExperience',
+      title: 'Work Experience',
+      renderItem: (item) => (
+        <div>
+          <h4 className="font-semibold">{item.role}</h4>
+          <p className="text-gray-600">{item.organizationName}</p>
+          <p className="text-gray-500">
+            {item.startMonth} {item.startYear} - {item.stillWorking ? 'Present' : `${item.endMonth} ${item.endYear}`}
+          </p>
+          <p className="text-gray-700 mt-2">{item.description}</p>
+        </div>
+      ),
+    },
+    {
+      key: 'projects',
+      title: 'Projects',
+      renderItem: (item) => (
+        <div>
+          <h4 className="font-semibold">{item.projectName}</h4>
+          <p className="text-gray-500">{item.month} {item.year}</p>
+          <p className="text-gray-700">{item.projectDescription}</p>
+          {item.projectLink && (
+            <a href={item.projectLink} target="_blank" rel="noopener noreferrer" 
+               className="text-blue-600 hover:underline">
+              Project Link
+            </a>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: 'skills',
+      title: 'Skills',
+      renderItem: (item) => (
+        <span className="inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+          {item}
+        </span>
+      ),
+    },
+    {
+      key: 'achievements',
+      title: 'Achievements',
+      renderItem: (item) => <p className="text-gray-700">{item}</p>,
+    },
+  ];
+}
