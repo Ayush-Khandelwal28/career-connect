@@ -94,7 +94,7 @@ const RecruiterAdminPage = () => {
                 ))}
                 {jobs.length === 0 && (
                   <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                    No jobs posted yet. Click "Post New Job" to get started.
+                    No jobs posted yet. Click &quot; Post New Job &quot; to get started.
                   </div>
                 )}
               </div>

@@ -36,8 +36,12 @@ const  JobCard = () => {
         const data = await response.json();
         setJobs(data);
         console.log(data);
-      } catch (error: any) {
-        setError(error.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       } finally {
         setLoading(false);
       }

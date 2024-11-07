@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react'; 
+import { useEffect, useState } from 'react';
 import { ResumeSectionList } from '@/components/resume/ResumeSectionList';
 import ResumeModal from '@/components/resume/ResumeModal';
 import { useResume } from '@/hooks/useResume';
@@ -12,31 +12,32 @@ import Loading from '@/components/Loading';
 const Page = () => {
   const { resumeData, setResumeData, updateItem, deleteItem } = useResume();
   const { isOpen, currentSection, editIndex, openModal, closeModal } = useModal();
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState<string | null>(null); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  type SectionData = ResumeData[keyof ResumeData];
 
   useEffect(() => {
     const fetchResumeData = async () => {
       try {
         const response = await fetch('/api/resume', {
           method: 'GET',
-        }); 
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch resume data');
         }
         const data = await response.json();
         console.log('Resume data fetched successfully:', data);
-        setResumeData(data); 
+        setResumeData(data);
       } catch (error) {
         console.error('Error fetching resume data:', error);
-        setError((error as Error).message); 
+        setError((error as Error).message);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
-
     fetchResumeData();
-  }, []); 
+  }, []);
 
   const handleAdd = (section: keyof ResumeData) => {
     openModal(section);
@@ -50,7 +51,7 @@ const Page = () => {
     deleteItem(section, index);
   };
 
-  const handleSave = (data: any) => {
+  const handleSave = (data: SectionData) => {
     if (currentSection) {
       updateItem(currentSection as keyof ResumeData, data, editIndex);
       closeModal();
@@ -81,8 +82,8 @@ const Page = () => {
     }
   };
 
-  if (loading) return <div><Loading /></div>; 
-  if (error) return <div>Error: {error}</div>; 
+  if (loading) return <div><Loading /></div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -101,7 +102,7 @@ const Page = () => {
         {isOpen && currentSection && (
           <ResumeModal
             section={currentSection as keyof ResumeData}
-            initialData={editIndex !== null ? resumeData[currentSection as keyof ResumeData][editIndex] : undefined}
+            initialData={editIndex !== null ? (resumeData[currentSection as keyof ResumeData][editIndex] as unknown as SectionData) : undefined}
             onSave={handleSave}
             onClose={closeModal}
           />

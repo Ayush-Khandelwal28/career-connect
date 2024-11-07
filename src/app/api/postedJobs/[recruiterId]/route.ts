@@ -16,6 +16,6 @@ export async function GET(req: Request, { params }: { params: { recruiterId: str
     }
     return NextResponse.json(jobs);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch jobs' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch jobs', message: (error as Error).message }, { status: 500 });
   }
 }

@@ -10,11 +10,10 @@ interface ShadCNDIalogProps {
   jobId: string;
 }
 
-const applyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle, jobId }) => {
+const ApplyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle, jobId }) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [text, setText] = useState('');
-  const [resume, setResume] = useState<File | null>(null);
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
 
   const { data: session } = useSession();
@@ -27,22 +26,24 @@ const applyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle, jobI
     }
   };
 
-
   const handleSubmit = async () => {
-
     if (!resumeUrl) {
       alert("Please wait until the file is uploaded.");
       return;
     }
 
+    if (!session?.id) {
+      alert("User session is not available. Please log in.");
+      return;
+    }
 
     const formDataToSend = {
       jobId,
-      userId: session?.id!,
+      userId: session.id,
       email,
       phone,
       coverLetter: text,
-      resumeLink: resumeUrl!,
+      resumeLink: resumeUrl,
     };
 
     const response = await fetch('/api/applyJob', {
@@ -57,9 +58,7 @@ const applyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle, jobI
     } else {
       alert('Failed to submit application');
     }
-
   };
-
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -95,7 +94,6 @@ const applyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle, jobI
             />
           </div>
 
-
           <div>
             <label className="block text-sm font-medium text-gray-700">Why you should be hired for this role?</label>
             <input
@@ -118,8 +116,8 @@ const applyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle, jobI
               required
               className="mt-1 block w-full border border-gray-300 rounded-lg py-2 px-3 text-gray-900 focus:outline-none focus:border-blue-500"
             />
-            {resume && (
-              <p className="mt-2 text-sm text-gray-500">Selected file: {resume.name}</p>
+            {resumeUrl && (
+              <p className="mt-2 text-sm text-gray-500">File uploaded successfully.</p>
             )}
           </div>
         </form>
@@ -145,4 +143,4 @@ const applyJob: React.FC<ShadCNDIalogProps> = ({ isOpen, onClose, jobTitle, jobI
   );
 };
 
-export default applyJob;
+export default ApplyJob;

@@ -1,7 +1,7 @@
 import { Label } from '@/components/ui/label';
-import { FormProps } from '../../../types/index';
+import { CareerObjectiveInterface, FormProps } from '../../../types/index';
 
-export function CareerObjectiveForm({ formData, handleInputChange }: FormProps) {
+export function CareerObjectiveForm({ formData, handleInputChange }: FormProps<CareerObjectiveInterface>) {
     return (
         <div>
             <Label htmlFor="objective">Objective</Label>

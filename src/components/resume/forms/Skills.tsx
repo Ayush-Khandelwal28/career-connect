@@ -1,16 +1,16 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FormProps } from '../../../types/index';
+import { FormProps, SkillInterface } from '../../../types/index';
 
-export function SkillForm({ formData, setFormData }: FormProps) {
+export function SkillForm({ formData, handleInputChange }: FormProps<SkillInterface>) {
   return (
     <div>
       <Label htmlFor="skill">Skill</Label>
       <Input
         id="skill"
         name="skill"
-        value={formData}
-        onChange={(e) => setFormData?.(e.target.value)}
+        value={formData.skill}
+        onChange={handleInputChange}
         required
       />
     </div>

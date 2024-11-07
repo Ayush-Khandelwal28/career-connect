@@ -1,17 +1,25 @@
+import { ReactNode } from 'react';
 import { ResumeData } from '../../types';
 
-interface Section {
-  key: keyof ResumeData;
-  title: string;
-  renderItem: (item: any) => React.ReactNode;
-}
+type SectionConfig = {
+  [K in keyof ResumeData]: {
+    key: K;
+    title: string;
+    renderItem: (item: ResumeData[K][0]) => ReactNode;
+  };
+};
 
-export function useSections(): Section[] {
-  return [
+export function useSections() {
+  const sections: SectionConfig[keyof SectionConfig][] = [
     {
       key: 'careerObjective',
       title: 'Career Objective',
-      renderItem: (item) => <p className="text-gray-700">{item.objective}</p>,
+      renderItem: (item) => (
+        <div>
+          <h4 className="font-semibold">Career Objective</h4>
+          <p className="text-gray-700">{item.objective}</p>
+        </div>
+      ),
     },
     {
       key: 'education',
@@ -49,8 +57,8 @@ export function useSections(): Section[] {
           <p className="text-gray-500">{item.month} {item.year}</p>
           <p className="text-gray-700">{item.projectDescription}</p>
           {item.projectLink && (
-            <a href={item.projectLink} target="_blank" rel="noopener noreferrer" 
-               className="text-blue-600 hover:underline">
+            <a href={item.projectLink} target="_blank" rel="noopener noreferrer"
+              className="text-blue-600 hover:underline">
               Project Link
             </a>
           )}
@@ -61,15 +69,21 @@ export function useSections(): Section[] {
       key: 'skills',
       title: 'Skills',
       renderItem: (item) => (
-        <span className="inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-          {item}
-        </span>
+        <div>
+          <h4 className="font-semibold">{item.skill}</h4>
+        </div>
       ),
     },
     {
       key: 'achievements',
       title: 'Achievements',
-      renderItem: (item) => <p className="text-gray-700">{item}</p>,
+      renderItem: (item) => (
+        <div>
+          <h4 className="font-semibold">{item.achievement}</h4>
+        </div>
+      ),
     },
   ];
+
+  return sections;
 }

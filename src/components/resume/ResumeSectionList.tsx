@@ -19,17 +19,22 @@ export function ResumeSectionList({
 
   return (
     <div className="space-y-6">
-      {sections.map((section) => (
-        <ResumeSection
-          key={section.key}
-          title={section.title}
-          items={resumeData[section.key as keyof ResumeData]}
-          onAdd={() => onAdd(section.key as keyof ResumeData)}
-          onEdit={(index) => onEdit(section.key as keyof ResumeData, index)}
-          onDelete={(index) => onDelete(section.key as keyof ResumeData, index)}
-          renderItem={section.renderItem}
-        />
-      ))}
+      {sections.map((section) => {
+        const key = section.key;
+        const items = resumeData[key];
+        
+        return (
+          <ResumeSection
+            key={key}
+            title={section.title}
+            items={items}
+            onAdd={() => onAdd(key)}
+            onEdit={(index) => onEdit(key, index)}
+            onDelete={(index) => onDelete(key, index)}
+            renderItem={section.renderItem as (item: typeof items[0]) => React.ReactNode}
+          />
+        );
+      })}
     </div>
   );
 }

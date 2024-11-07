@@ -1,6 +1,5 @@
 "use client";
-import { useSession, signIn } from "next-auth/react";
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 import HomePage from "../components/Homepage";
 import LandingPage from "../components/LandingPage";
 import Loading from "../components/Loading";

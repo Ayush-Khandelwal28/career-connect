@@ -1,8 +1,8 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FormProps } from '../../../types/index';
+import { FormProps, ProjectInterface } from '../../../types/index';
 
-export function ProjectForm({ formData, handleInputChange }: FormProps) {
+export function ProjectForm({ formData, handleInputChange }: FormProps<ProjectInterface>) {
   return (
     <>
       <div>

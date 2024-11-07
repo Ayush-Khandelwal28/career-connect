@@ -33,7 +33,7 @@ export interface ProjectInterface {
 }
 
 export interface SkillInterface {
-  skills: string[];
+  skill: string;
 }
 
 export interface AchievementInterface {
@@ -45,13 +45,25 @@ export interface ResumeData {
   education: EducationInterface[];
   workExperience: WorkExperienceInterface[];
   projects: ProjectInterface[];
-  achievements: string[];
-  skills: string[];
+  achievements: AchievementInterface[];
+  skills: SkillInterface[];
 }
 
-export interface FormProps {
-  formData: any;
+export interface jobInterface {
+  title: string;
+  company: string;
+  minSalary: number;
+  maxSalary: number;
+  location: string;
+  type: string;
+  workMode: string;
+  description: string;
+  datePosted: string;
+}
+
+export interface FormProps<T> {
+  formData: T;
   handleInputChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleCheckboxChange?: (name: string, checked: boolean) => void;
-  setFormData?: (value: any) => void;
+  setFormData?: (value: T) => void;
 }

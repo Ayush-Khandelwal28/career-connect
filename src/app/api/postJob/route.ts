@@ -18,7 +18,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        let data = await req.json();
+        const data = await req.json();
 
         const recruiterId = parseInt(session.id, 10);
         if (isNaN(recruiterId)) {

@@ -32,7 +32,7 @@ export default function LandingPage() {
                         </h1>
                         <p className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto">
                             Connect with top companies and talent through our platform.
-                            Whether you're hiring or seeking opportunities, we've got you covered.
+                            Whether you&apos;re hiring or seeking opportunities, we&apos;ve got you covered.
                         </p>
                     </div>
 

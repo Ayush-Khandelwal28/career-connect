@@ -1,9 +1,7 @@
-"use client";
-
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { ResumeData } from '../../types/index';
+import { ResumeData, CareerObjectiveInterface, EducationInterface, WorkExperienceInterface, ProjectInterface, SkillInterface, AchievementInterface, FormProps } from '../../types/index';
 import { getInitialFormData, formatSectionTitle } from '../../utils/resume';
 import { CareerObjectiveForm } from '../resume/forms/CareerObjective';
 import { EducationForm } from '../resume/forms/Education';
@@ -12,15 +10,22 @@ import { ProjectForm } from '../resume/forms/Projects';
 import { SkillForm } from '../resume/forms/Skills';
 import { AchievementForm } from '../resume/forms/Achievements';
 
-interface ResumeModalProps {
+type SectionData = ResumeData[keyof ResumeData];
+
+interface ResumeModalProps<T> {
   section: keyof ResumeData;
-  initialData?: any;
-  onSave: (data: any) => void;
+  initialData?: T;
+  onSave: (data: T) => void;
   onClose: () => void;
 }
 
-function ResumeModal({ section, initialData, onSave, onClose }: ResumeModalProps) {
-  const [formData, setFormData] = useState(initialData || getInitialFormData(section));
+function ResumeModal<T extends SectionData>({
+  section,
+  initialData,
+  onSave,
+  onClose,
+}: ResumeModalProps<T>) {
+  const [formData, setFormData] = useState<T>(initialData || getInitialFormData(section) as T);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,15 +34,15 @@ function ResumeModal({ section, initialData, onSave, onClose }: ResumeModalProps
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev: any) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCheckboxChange = (name: string, checked: boolean) => {
-    setFormData((prev: any) => ({ ...prev, [name]: checked }));
+    setFormData((prev) => ({ ...prev, [name]: checked }));
   };
 
   const renderForm = () => {
-    const props = {
+    const commonProps = {
       formData,
       handleInputChange,
       handleCheckboxChange,
@@ -46,17 +51,17 @@ function ResumeModal({ section, initialData, onSave, onClose }: ResumeModalProps
 
     switch (section) {
       case 'careerObjective':
-        return <CareerObjectiveForm {...props} />;
+        return <CareerObjectiveForm {...(commonProps as unknown as FormProps<CareerObjectiveInterface>)} />;
       case 'education':
-        return <EducationForm {...props} />;
+        return <EducationForm {...(commonProps as unknown as FormProps<EducationInterface>)} />;
       case 'workExperience':
-        return <WorkExperienceForm {...props} />;
+        return <WorkExperienceForm {...(commonProps as unknown as FormProps<WorkExperienceInterface>)} />;
       case 'projects':
-        return <ProjectForm {...props} />;
+        return <ProjectForm {...(commonProps as unknown as FormProps<ProjectInterface>)} />;
       case 'skills':
-        return <SkillForm {...props} />;
+        return <SkillForm {...(commonProps as unknown as FormProps<SkillInterface>)} />;
       case 'achievements':
-        return <AchievementForm {...props} />;
+        return <AchievementForm {...(commonProps as unknown as FormProps<AchievementInterface>)} />;
       default:
         return null;
     }

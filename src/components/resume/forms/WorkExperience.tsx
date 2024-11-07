@@ -1,9 +1,9 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { FormProps } from '../../../types/index';
+import { FormProps, WorkExperienceInterface } from '../../../types/index';
 
-export function WorkExperienceForm({ formData, handleInputChange, handleCheckboxChange }: FormProps) {
+export function WorkExperienceForm({ formData, handleInputChange, handleCheckboxChange }: FormProps<WorkExperienceInterface>) {
   return (
     <>
       <div>

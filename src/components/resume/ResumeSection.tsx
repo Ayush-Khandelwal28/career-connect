@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { PlusCircle, Pencil, Trash2 } from 'lucide-react';
+import { ReactNode } from 'react';
 
 interface ResumeSectionProps<T> {
   title: string;
@@ -7,7 +8,7 @@ interface ResumeSectionProps<T> {
   onAdd: () => void;
   onEdit: (index: number) => void;
   onDelete: (index: number) => void;
-  renderItem: (item: T) => React.ReactNode;
+  renderItem: (item: T) => ReactNode;
 }
 
 function ResumeSection<T>({

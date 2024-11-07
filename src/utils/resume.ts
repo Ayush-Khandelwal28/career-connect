@@ -33,9 +33,13 @@ export function getInitialFormData(section: keyof ResumeData) {
         year: '',
       };
     case 'skills':
-      return '';
+      return {
+        skill: '',
+      }
     case 'achievements':
-      return '';
+      return {
+        achievement: '',
+      }
     default:
       return {};
   }

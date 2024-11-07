@@ -9,7 +9,6 @@ import {
   Briefcase,
   Building2,
   CalendarDays,
-  Clock,
   DollarSign,
   MapPin,
   MonitorSmartphone,
@@ -17,11 +16,13 @@ import {
   Users,
 } from 'lucide-react';
 import Loading from '@/components/Loading';
+import { jobInterface } from '@/types';
 
 const Page = () => {
   const { id } = useParams() as { id: string };
   const [showApplication, setShowApplication] = useState(false);
-  const [job, setJob] = useState<any>(null);
+
+  const [job, setJob] = useState<jobInterface | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -75,7 +76,7 @@ const Page = () => {
       <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
         <div className="w-full max-w-lg rounded-lg border bg-white p-6 text-center shadow-lg">
           <h2 className="text-xl font-semibold text-gray-800">Job Not Found</h2>
-          <p className="mt-2 text-gray-600">The job posting you're looking for doesn't exist.</p>
+          <p className="mt-2 text-gray-600">The job posting you&apos;re looking for doesn&apos;t exist.</p>
         </div>
       </div>
     );
