@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { PlusCircle, Briefcase, ArrowRight, Loader2 } from 'lucide-react';
+import { PlusCircle, Briefcase, ArrowRight} from 'lucide-react';
+import Loading from '@/components/Loading';
 
 const RecruiterAdminPage = () => {
   const [jobs, setJobs] = useState<{ id: string; title: string; description: string }[]>([]);
@@ -68,10 +69,8 @@ const RecruiterAdminPage = () => {
 
           <div className="p-6">
             {loading ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
-              </div>
-            ) : (
+              <Loading />
+            ) : jobs.length > 0 ? (
               <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
                 {jobs.map((job) => (
                   <div
@@ -92,11 +91,10 @@ const RecruiterAdminPage = () => {
                     </div>
                   </div>
                 ))}
-                {jobs.length === 0 && (
-                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                    No jobs posted yet. Click &quot; Post New Job &quot; to get started.
-                  </div>
-                )}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                No jobs posted yet. Click &quot;Post New Job&quot; to get started.
               </div>
             )}
           </div>

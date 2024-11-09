@@ -30,30 +30,31 @@ function ResumeSection<T>({
       </div>
 
       <div className="space-y-4">
-        {items.map((item, index) => (
-          <div key={index} className="relative bg-gray-50 rounded-lg p-4">
-            <div className="absolute top-2 right-2 flex space-x-2">
-              <Button
-                onClick={() => onEdit(index)}
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
-              >
-                <Pencil className="h-4 w-4" />
-              </Button>
-              <Button
-                onClick={() => onDelete(index)}
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+        {items && items.length > 0 ? (
+          items.map((item, index) => (
+            <div key={index} className="relative bg-gray-50 rounded-lg p-4">
+              <div className="absolute top-2 right-2 flex space-x-2">
+                <Button
+                  onClick={() => onEdit(index)}
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button
+                  onClick={() => onDelete(index)}
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+              {renderItem(item)}
             </div>
-            {renderItem(item)}
-          </div>
-        ))}
-        {items.length === 0 && (
+          ))
+        ) : (
           <p className="text-gray-500 text-center py-4">
             No {title.toLowerCase()} added yet
           </p>

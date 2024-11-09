@@ -32,14 +32,10 @@ export const useResume = () => {
     }));
   };
 
-  const setResumeDataDirectly = (data: ResumeData) => {
-    setResumeData(data);
-  };
-
   return {
     resumeData,
     updateItem,
     deleteItem,
-    setResumeData: setResumeDataDirectly,
+    setResumeData: setResumeData,
   };
 }

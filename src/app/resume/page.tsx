@@ -23,9 +23,6 @@ const Page = () => {
         const response = await fetch('/api/resume', {
           method: 'GET',
         });
-        if (!response.ok) {
-          throw new Error('Failed to fetch resume data');
-        }
         const data = await response.json();
         console.log('Resume data fetched successfully:', data);
         setResumeData(data);
@@ -110,7 +107,7 @@ const Page = () => {
 
         <div className="flex justify-center mt-6">
           <Button onClick={handleSubmit} className="bg-blue-500 text-white w-1/2 sm:w-1/3 md:w-1/4">
-            Submit Resume
+            Update Resume
           </Button>
         </div>
       </div>

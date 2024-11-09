@@ -3,14 +3,23 @@ import ResumeSection from './ResumeSection';
 import { useSections } from './sections';
 
 interface ResumeSectionListProps {
-  resumeData: ResumeData;
+  resumeData?: ResumeData;
   onAdd: (section: keyof ResumeData) => void;
   onEdit: (section: keyof ResumeData, index: number) => void;
   onDelete: (section: keyof ResumeData, index: number) => void;
 }
 
+const defaultResumeData: ResumeData = {
+  careerObjective: [],
+  education: [],
+  workExperience: [],
+  projects: [],
+  achievements: [],
+  skills: [],
+};
+
 export function ResumeSectionList({
-  resumeData,
+  resumeData = defaultResumeData,
   onAdd,
   onEdit,
   onDelete,
@@ -21,7 +30,7 @@ export function ResumeSectionList({
     <div className="space-y-6">
       {sections.map((section) => {
         const key = section.key;
-        const items = resumeData[key];
+        const items = resumeData[key] ?? [];
         
         return (
           <ResumeSection
