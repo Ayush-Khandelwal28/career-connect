@@ -33,6 +33,7 @@ export function useSections() {
           <div>
             <h4 className="font-semibold">{item.degreeName} in {item.courseName}</h4>
             <p className="text-gray-600">{item.collegeName}</p>
+            <p className="text-gray-600">{item.location}</p>
             <p className="text-gray-500">
               {item.courseStartYear} - {item.courseEndYear} | GPA: {item.currentGPA}
             </p>
@@ -65,6 +66,7 @@ export function useSections() {
         return (
           <div>
             <h4 className="font-semibold">{item.projectName}</h4>
+            <p className="text-gray-700">{item.projectTags}</p>
             <p className="text-gray-500">{item.month} {item.year}</p>
             <p className="text-gray-700">{item.projectDescription}</p>
             {item.projectLink && (
@@ -97,6 +99,18 @@ export function useSections() {
         return (
           <div>
             <h4 className="font-semibold">{item.achievement}</h4>
+          </div>
+        );
+      },
+    },
+    {
+      key: 'extraCurricular',
+      title: 'Extracurriculars',
+      renderItem: (item) => {
+        if (!item) return null;
+        return (
+          <div>
+            <h4 className="font-semibold">{item.activity}</h4>
           </div>
         );
       },

@@ -14,8 +14,9 @@ model User {
   name         String
   role         Role
   resume       Resume?
-  jobs         Job[]         @relation("PostedJobs") 
-  applications Application[] 
+  userProfile  UserProfile?
+  jobs         Job[]         @relation("PostedJobs")
+  applications Application[]
 }
 
 enum Role {
@@ -81,6 +82,18 @@ model Resume {
   projects          Project[]
   achievements      Achievement[]
   skills            Skill[]
+  extraCurricular   ExtraCurricular[]
+}
+
+model UserProfile {
+  id       Int     @id @default(autoincrement())
+  name     String
+  email    String  @unique
+  phone    String
+  linkedIn String?
+  github   String?
+  userId   Int     @unique
+  user     User    @relation(fields: [userId], references: [id])
 }
 
 model CareerObjective {
@@ -95,6 +108,7 @@ model Education {
   collegeName    String
   degreeName     String
   courseName     String
+  location       String
   courseStartYear String
   courseEndYear  String
   currentGPA     String
@@ -119,6 +133,7 @@ model WorkExperience {
 model Project {
   id               Int     @id @default(autoincrement())
   projectName      String
+  projectTags      String
   projectDescription String
   projectLink      String
   month            String
@@ -130,6 +145,13 @@ model Project {
 model Achievement {
   id          Int     @id @default(autoincrement())
   achievement String
+  resume      Resume  @relation(fields: [resumeId], references: [id])
+  resumeId    Int
+}
+
+model ExtraCurricular {
+  id          Int     @id @default(autoincrement())
+  activity String
   resume      Resume  @relation(fields: [resumeId], references: [id])
   resumeId    Int
 }

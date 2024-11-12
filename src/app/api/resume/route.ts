@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { getServerSession } from 'next-auth';
 import { AuthOptions } from '@/app/api/auth/[...nextauth]/options'
-import { CareerObjectiveInterface, EducationInterface, ProjectInterface, WorkExperienceInterface, AchievementInterface, SkillInterface } from '@/types';
+import { CareerObjectiveInterface, EducationInterface, ProjectInterface, WorkExperienceInterface, AchievementInterface, SkillInterface, ExtraCurricularInterface } from '@/types';
 
 const prisma = new PrismaClient();
 
@@ -14,12 +14,13 @@ export async function POST(req: Request) {
       workExperience,
       projects,
       achievements,
-      skills
+      skills,
+      extraCurricular
     } = await req.json();
 
-    console.log('Incoming data:', { careerObjective, education, workExperience, projects, achievements, skills });
+    console.log('Incoming data:', { careerObjective, education, workExperience, projects, achievements, skills, extraCurricular });
 
-    if (!careerObjective || !education || !workExperience || !projects || !achievements || !skills) {
+    if (!careerObjective || !education || !workExperience || !projects || !achievements || !skills || !extraCurricular) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
 
@@ -43,8 +44,9 @@ export async function POST(req: Request) {
           deleteMany: {},
           create: education.map((edu: EducationInterface) => ({
             collegeName: edu.collegeName,
-            courseName: edu.degreeName,
+            courseName: edu.courseName,
             degreeName: edu.degreeName,
+            location: edu.location,
             courseStartYear: edu.courseStartYear,
             courseEndYear: edu.courseEndYear,
             currentGPA: edu.currentGPA,
@@ -69,6 +71,7 @@ export async function POST(req: Request) {
             projectName: project.projectName,
             projectLink: project.projectLink,
             projectDescription: project.projectDescription,
+            projectTags: project.projectTags,
             month: project.month,
             year: project.year,
           })),
@@ -83,6 +86,12 @@ export async function POST(req: Request) {
           deleteMany: {},
           create: skills.map((skill: SkillInterface) => ({
             skill: skill.skill,
+          })),
+        },
+        extraCurricular: {
+          deleteMany: {},
+          create: extraCurricular.map((activity: ExtraCurricularInterface) => ({
+            activity: activity.activity,
           })),
         },
       },
@@ -96,6 +105,7 @@ export async function POST(req: Request) {
             collegeName: edu.collegeName,
             courseName: edu.degreeName,
             degreeName: edu.degreeName,
+            location: edu.location,
             courseStartYear: edu.courseStartYear,
             courseEndYear: edu.courseEndYear,
             currentGPA: edu.currentGPA,
@@ -118,6 +128,7 @@ export async function POST(req: Request) {
             projectName: project.projectName,
             projectLink: project.projectLink,
             projectDescription: project.projectDescription,
+            projectTags: project.projectTags,
             month: project.month,
             year: project.year,
           })),
@@ -130,6 +141,11 @@ export async function POST(req: Request) {
         skills: {
           create: skills.map((skill: SkillInterface) => ({
             skill: skill.skill,
+          })),
+        },
+        extraCurricular: {
+          create: extraCurricular.map((activity: ExtraCurricularInterface) => ({
+            activity: activity.activity,
           })),
         },
       },
@@ -161,6 +177,7 @@ export async function GET() {
         projects: true,
         achievements: true,
         skills: true,
+        extraCurricular: true,
       },
     });
 

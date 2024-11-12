@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { ResumeData, CareerObjectiveInterface, EducationInterface, WorkExperienceInterface, ProjectInterface, SkillInterface, AchievementInterface, FormProps } from '../../types/index';
+import { ResumeData, CareerObjectiveInterface, EducationInterface, WorkExperienceInterface, ProjectInterface, SkillInterface, AchievementInterface, FormProps, ExtraCurricularInterface } from '../../types/index';
 import { getInitialFormData, formatSectionTitle } from '../../utils/resume';
 import { CareerObjectiveForm } from '../resume/forms/CareerObjective';
 import { EducationForm } from '../resume/forms/Education';
@@ -9,6 +9,7 @@ import { WorkExperienceForm } from '../resume/forms/WorkExperience';
 import { ProjectForm } from '../resume/forms/Projects';
 import { SkillForm } from '../resume/forms/Skills';
 import { AchievementForm } from '../resume/forms/Achievements';
+import { ExtracurricularForm } from './forms/Extracurricular';
 
 type SectionData = ResumeData[keyof ResumeData];
 
@@ -62,6 +63,8 @@ function ResumeModal<T extends SectionData>({
         return <SkillForm {...(commonProps as unknown as FormProps<SkillInterface>)} />;
       case 'achievements':
         return <AchievementForm {...(commonProps as unknown as FormProps<AchievementInterface>)} />;
+      case 'extraCurricular':
+        return <ExtracurricularForm {...(commonProps as unknown as FormProps<ExtraCurricularInterface>)} />;
       default:
         return null;
     }

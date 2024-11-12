@@ -10,6 +10,7 @@ const initialResumeData: ResumeData = {
   projects: [],
   achievements: [],
   skills: [],
+  extraCurricular: [],
 };
 
 export const useResume = () => {
@@ -20,8 +21,10 @@ export const useResume = () => {
       ...prev,
       [section]:
         index !== null
-          ? prev[section].map((item, i) => (i === index ? data : item))
-          : [...prev[section], data],
+          ? Array.isArray(prev[section])
+            ? prev[section].map((item, i) => (i === index ? data : item))
+            : []
+          : [...(Array.isArray(prev[section]) ? prev[section] : []), data],
     }));
   };
 

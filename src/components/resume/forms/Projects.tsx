@@ -16,6 +16,16 @@ export function ProjectForm({ formData, handleInputChange }: FormProps<ProjectIn
         />
       </div>
       <div>
+        <Label htmlFor="projectTags">Project Tags (Enter all tags with commas in between)</Label>
+        <Input
+          id="projectTags"
+          name="projectTags"
+          value={formData.projectTags}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+      <div>
         <Label htmlFor="projectDescription">Description</Label>
         <textarea
           id="projectDescription"

@@ -35,6 +35,16 @@ export function EducationForm({ formData, handleInputChange }: FormProps<Educati
           required
         />
       </div>
+      <div>
+        <Label htmlFor="location">Location</Label>
+        <Input
+          id="location"
+          name="location"
+          value={formData.location}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="courseStartYear">Start Year</Label>

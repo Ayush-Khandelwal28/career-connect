@@ -16,6 +16,7 @@ const defaultResumeData: ResumeData = {
   projects: [],
   achievements: [],
   skills: [],
+  extraCurricular: [],
 };
 
 export function ResumeSectionList({

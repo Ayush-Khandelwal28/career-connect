@@ -1,5 +1,13 @@
 import { ChangeEvent } from 'react';
 
+export interface UserProfileInterface {
+  name: string;
+  email: string;
+  phone: string;
+  linkedIn?: string;
+  github?: string;
+}
+
 export interface CareerObjectiveInterface {
   objective: string;
 }
@@ -11,6 +19,7 @@ export interface EducationInterface {
   courseStartYear: string;
   courseEndYear: string;
   currentGPA: string;
+  location: string;
 }
 
 export interface WorkExperienceInterface {
@@ -26,6 +35,7 @@ export interface WorkExperienceInterface {
 
 export interface ProjectInterface {
   projectName: string;
+  projectTags: string;
   projectDescription: string;
   projectLink: string;
   month: string;
@@ -40,6 +50,10 @@ export interface AchievementInterface {
   achievement: string;
 }
 
+export interface ExtraCurricularInterface {
+  activity: string;
+}
+
 export interface ResumeData {
   careerObjective: CareerObjectiveInterface[];
   education: EducationInterface[];
@@ -47,6 +61,7 @@ export interface ResumeData {
   projects: ProjectInterface[];
   achievements: AchievementInterface[];
   skills: SkillInterface[];
+  extraCurricular: ExtraCurricularInterface[];
 }
 
 export interface jobInterface {

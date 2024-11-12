@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Job" ALTER COLUMN "company" DROP DEFAULT;

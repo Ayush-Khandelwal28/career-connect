@@ -9,6 +9,7 @@ export function getInitialFormData(section: keyof ResumeData) {
         collegeName: '',
         degreeName: '',
         courseName: '',
+        location: '',
         courseStartYear: '',
         courseEndYear: '',
         currentGPA: '',
@@ -39,6 +40,10 @@ export function getInitialFormData(section: keyof ResumeData) {
     case 'achievements':
       return {
         achievement: '',
+      }
+    case 'extraCurricular':
+      return {
+        activity: '',
       }
     default:
       return {};
