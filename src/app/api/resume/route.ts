@@ -103,7 +103,7 @@ export async function POST(req: Request) {
         education: {
           create: education.map((edu: EducationInterface) => ({
             collegeName: edu.collegeName,
-            courseName: edu.degreeName,
+            courseName: edu.courseName,
             degreeName: edu.degreeName,
             location: edu.location,
             courseStartYear: edu.courseStartYear,
