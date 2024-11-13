@@ -52,7 +52,7 @@ const JobApplicationsPage = () => {
     };
 
     fetchApplications();
-  }, [id]);
+  },);
 
   const Modal = ({ isOpen, onClose, children }: { isOpen: boolean; onClose: () => void; children: React.ReactNode }) => {
     if (!isOpen) return null;
@@ -120,7 +120,6 @@ const JobApplicationsPage = () => {
                       </div>
                       <div>
                         <h3 className="font-medium text-gray-900">{app.applicant.name}</h3>
-                        <p className="text-sm text-gray-500">{app.applicant.role}</p>
                       </div>
                     </div>
                     <button
@@ -166,7 +165,7 @@ const JobApplicationsPage = () => {
                   Contact information for {selectedApplicant.applicant.name}
                 </p>
               </div>
-              
+
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <Mail className="h-5 w-5 text-gray-400" />

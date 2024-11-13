@@ -14,13 +14,13 @@ const Header = () => {
   const jobSeekerNavigation = [
     { name: 'Home', href: '/' },
     { name: 'Resume', href: '/resume' },
-    { name: 'Profile', href: '/profile' },
+    // { name: 'Profile', href: '/profile' },
   ]
 
   const employerNavigation = [
     { name: 'Home', href: '/' },
     { name: 'Post Job', href: '/post' },
-    { name: 'Profile', href: '/profile' },
+    // { name: 'Profile', href: '/profile' },
   ]
 
   return (
