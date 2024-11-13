@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 const Header = () => {
@@ -28,10 +28,7 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link
-              href="/"
-              className="flex items-center space-x-2"
-            >
+            <Link href="/" className="flex items-center space-x-2">
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Career Connect
               </span>
@@ -39,7 +36,7 @@ const Header = () => {
           </div>
 
           <nav className="hidden md:flex items-center space-x-8">
-            {(role === 'RECRUITER' ? employerNavigation : jobSeekerNavigation).map((item) => (
+            {session && (role === 'RECRUITER' ? employerNavigation : jobSeekerNavigation).map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
@@ -49,16 +46,16 @@ const Header = () => {
               </Link>
             ))}
             {session ? (
-                <Button
+              <Button
                 onClick={() => {
                   signOut();
                   router.push('/');
                 }}
                 variant="ghost"
                 className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                >
+              >
                 Sign Out
-                </Button>
+              </Button>
             ) : (
               <Button
                 onClick={() => router.push('/signin')}

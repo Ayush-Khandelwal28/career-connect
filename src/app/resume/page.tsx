@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 export default function Home() {
   const router = useRouter();
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [urls, setUrls] = useState<{ texUrl: string; overleafUrl: string } | null>(null);
 
@@ -28,9 +29,13 @@ export default function Home() {
         body: JSON.stringify({ texContent }),
       });
 
-      const { texUrl } = await response.json();
+      if (!response.ok) {
+        throw new Error(`Failed to generate PDF: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const { texUrl } = data;
       const overleafUrl = `https://www.overleaf.com/docs?snip_uri=${texUrl}`;
-      console.log('Resume files generated:', { texUrl, overleafUrl });
       setUrls({ texUrl, overleafUrl });
     } catch (error) {
       console.error('Error generating files:', error);
@@ -42,18 +47,34 @@ export default function Home() {
   useEffect(() => {
     const fetchResumeData = async () => {
       try {
-        const response = await fetch('/api/resume', {
-          method: 'GET',
-        });
-        const data = await response.json();
-        console.log('Resume data fetched successfully:', data);
+        const response = await fetch('/api/resume');
+        if (!response.ok) {
+          const errorData = await response.json();
+          
+          if (response.status === 401) {
+            router.push('/signin');
+            return;
+          }
+          
+          if (response.status === 404) {
+            router.push('/editResume');
+            return;
+          }
+          
+          throw new Error(errorData.error || 'Failed to fetch resume');
+        }
+
+        const { data } = await response.json();
         setResumeData(data);
       } catch (error) {
         console.error('Error fetching resume data:', error);
-      } 
+      } finally {
+        setLoading(false);
+      }
     };
+
     fetchResumeData();
-  }, []);
+  }, [router]);
 
   const handleDownloadTex = () => {
     if (urls?.texUrl) {
@@ -67,6 +88,8 @@ export default function Home() {
     }
   };
 
+  if (loading) return <Loading />;
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -76,11 +99,11 @@ export default function Home() {
             Edit Resume
           </Button>
         </div>
-        
+
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
           Resume Builder
         </h1>
-        
+
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
           <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
             <FileText className="w-6 h-6" />

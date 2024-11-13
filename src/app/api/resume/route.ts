@@ -1,13 +1,24 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { getServerSession } from 'next-auth';
-import { AuthOptions } from '@/app/api/auth/[...nextauth]/options'
+import { AuthOptions } from '@/app/api/auth/[...nextauth]/options';
 import { CareerObjectiveInterface, EducationInterface, ProjectInterface, WorkExperienceInterface, AchievementInterface, SkillInterface, ExtraCurricularInterface } from '@/types';
 
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   try {
+    const session = await getServerSession(AuthOptions);
+    const userId = session?.id;
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'User not authenticated' },
+        { status: 401 }
+      );
+    }
+
+    const body = await req.json();
     const {
       careerObjective,
       education,
@@ -16,19 +27,14 @@ export async function POST(req: Request) {
       achievements,
       skills,
       extraCurricular
-    } = await req.json();
+    } = body;
 
-    console.log('Incoming data:', { careerObjective, education, workExperience, projects, achievements, skills, extraCurricular });
-
-    if (!careerObjective || !education || !workExperience || !projects || !achievements || !skills || !extraCurricular) {
-      return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
-    }
-
-    const session = await getServerSession(AuthOptions);
-    const userId = session?.id;
-
-    if (!userId) {
-      return NextResponse.json({ error: 'User not authenticated' }, { status: 401 });
+    if (!careerObjective?.length || !education?.length || !workExperience?.length || 
+        !projects?.length || !achievements?.length || !skills?.length || !extraCurricular?.length) {
+      return NextResponse.json(
+        { error: 'All fields are required and must not be empty' },
+        { status: 400 }
+      );
     }
 
     const resume = await prisma.resume.upsert({
@@ -98,7 +104,9 @@ export async function POST(req: Request) {
       create: {
         userId: parseInt(userId),
         careerObjective: {
-          create: { objective: careerObjective[0].objective },
+          create: careerObjective.map((obj: CareerObjectiveInterface) => ({
+            objective: obj.objective,
+          })),
         },
         education: {
           create: education.map((edu: EducationInterface) => ({
@@ -151,13 +159,15 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(resume, { status: 201 });
+    return NextResponse.json({ data: resume }, { status: 201 });
   } catch (error) {
     console.error('Error creating/updating resume:', error);
-    return NextResponse.json({ error: 'Failed to create/update resume' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error occurred while processing your request' },
+      { status: 500 }
+    );
   }
 }
-
 
 export async function GET() {
   try {
@@ -165,7 +175,10 @@ export async function GET() {
     const userId = session?.id;
 
     if (!userId) {
-      return NextResponse.json({ error: 'User not authenticated' }, { status: 401 });
+      return NextResponse.json(
+        { error: 'User not authenticated' },
+        { status: 401 }
+      );
     }
 
     const resume = await prisma.resume.findUnique({
@@ -182,12 +195,18 @@ export async function GET() {
     });
 
     if (!resume) {
-      return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Resume not found' },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json(resume, { status: 200 });
+    return NextResponse.json({ data: resume }, { status: 200 });
   } catch (error) {
     console.error('Error fetching resume:', error);
-    return NextResponse.json({ error: 'Failed to fetch resume' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error occurred while fetching your resume' },
+      { status: 500 }
+    );
   }
 }
