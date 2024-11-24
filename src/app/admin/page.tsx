@@ -21,7 +21,7 @@ const RecruiterAdminPage = () => {
         console.log("Recruiter ID:", recruiterId);
 
         if (recruiterId) {
-          const response = await fetch(`/api/postedJobs/${recruiterId}`);
+          const response = await fetch(`/api/jobs/myJobs/${recruiterId}`);
           const data = await response.json();
           setJobs(data);
           console.log("Jobs:", data);

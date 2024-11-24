@@ -21,7 +21,7 @@ export default function Home() {
     setIsGenerating(true);
     try {
       const texContent = generateLatexFile(resumeData);
-      const response = await fetch('/api/generate-pdf', {
+      const response = await fetch('/api/resume/generate-pdf', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

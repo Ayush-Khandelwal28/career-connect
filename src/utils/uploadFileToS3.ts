@@ -7,7 +7,7 @@ export const uploadFileToS3 = async (file: File) => {
         formData.append('fileName', fileName);
         formData.append('fileType', fileType);
 
-        const response = await fetch('/api/uploadResume', {
+        const response = await fetch('/api/resume/upload', {
             method: 'POST',
             body: formData,
         });

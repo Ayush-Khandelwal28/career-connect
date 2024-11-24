@@ -18,13 +18,10 @@ export async function POST(request: Request) {
     const { texContent } = await request.json();
     const texFilePath = path.join(outputDir, 'resume.tex');
 
-    // Step 1: Ensure output directory exists
     await fs.mkdir(outputDir, { recursive: true });
 
-    // Step 2: Write .tex content to a file
     await fs.writeFile(texFilePath, texContent);
 
-    // Step 3: Upload to S3
     const bucketName = process.env.AWS_BUCKET_NAME || '';
     const key = `resumes/${Date.now()}-resume.tex`;
     
@@ -43,7 +40,6 @@ export async function POST(request: Request) {
 
     
 
-    // Return both URLs
     return NextResponse.json({
       texUrl: s3Url
     });
